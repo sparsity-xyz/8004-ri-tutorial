@@ -19,8 +19,8 @@ see [Setup_Nitro_Enclave_Runtime.md](Setup_Nitro_Enclave_Runtime.md) for details
 ## Use enclave-toolkit to build TEE agents
 
 
-## Use trustless-agent-framework to build them 8004-compliant agents
+## Use trustless-agent-framework to build 8004-compliant TEE agents
 
 
-## Use nova to deploy agents to sparsity-run TEE cloud
+## Use Nova to deploy agents to Sparsity-run TEE cloud
 

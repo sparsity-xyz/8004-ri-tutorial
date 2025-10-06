@@ -69,15 +69,17 @@ This diagram shows how developers build using the Enclave Toolkit (Layer 1), mak
 ---
 
 ## Layer 3: Nova Platform
+
+**Higih-level Summary:** Similar to Vercel for websites, Nova is designed specifically for TEE applications.
+
 **Purpose:** Sparsity-operated platform for hosting, deploying, and managing TEE applications—similar to Vercel, but for TEE.
 
 **Features:**
 - **App Registration:** Allows developers to register their TEE applications on the Nova platform.
 - **App Deployment & Run in Sparsity-Run TEE Cloud Environments:** Provides managed infrastructure for deploying and running TEE applications securely in Sparsity's cloud.
 
+
 ---
 
 Sparsity's layered approach enables developers to quickly build, certify, and deploy secure TEE applications with minimal friction, leveraging both AWS Nitro Enclaves and advanced compliance and hosting solutions.
- 
----
 
