@@ -14,7 +14,7 @@ see [SPARSITY_OFFERINGS.md](SPARSITY_OFFERINGS.md) for details.
 
 Before using Sparsity's offerings, ensure you have an AWS Nitro Enclaves environment set up. This includes having an AWS account, configuring Nitro Enclaves on your EC2 instances, and setting up necessary IAM roles and permissions.
 
-see [Setup_Nitro_Enclave_Runtime.md](Setup_Nitro_Enclave_Runtime.md) for details.
+see [AWS_Nitro_Enclave_Runtime.md](AWS_Nitro_Enclave_Runtime.md) for details.
 
 ## Use enclave-toolkit to build TEE agents
 
