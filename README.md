@@ -1,7 +1,10 @@
-# sparsity-trustless-agents-framework
+# Sparsity Trustless Agents Framework
 
+## Overview
 
-## Sparsity Solution: Three-Layer Framework
+The Sparsity Trustless Agents Framework provides a comprehensive solution for building and deploying secure, privacy-preserving applications in a trusted execution environment (TEE). By leveraging AWS Nitro Enclaves, the framework ensures that sensitive data is processed in isolation, protecting it from unauthorized access and potential breaches.
+
+## Three-Layer Framework
 
 Sparsity's layered approach enables developers to quickly build, certify, and deploy secure TEE applications with minimal friction, leveraging both AWS Nitro Enclaves and advanced compliance and hosting solutions.
 
@@ -13,11 +16,11 @@ Before using Sparsity's offerings, ensure you have an AWS Nitro Enclaves environ
 
 see [Setup_Nitro_Enclave_Runtime.md](Setup_Nitro_Enclave_Runtime.md) for details.
 
-## Use enclave-toolkit to build TEE apps
+## Use enclave-toolkit to build TEE agents
 
 
-## Use trustless-agent-framework to build them 8004-compliant apps
+## Use trustless-agent-framework to build them 8004-compliant agents
 
 
-## Use nova to deploy them to sparsity-run TEE cloud
+## Use nova to deploy agents to sparsity-run TEE cloud
 
