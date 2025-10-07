@@ -19,7 +19,7 @@ class App(BaseNitroEnclaveApp):
 
     def add_endpoints(self):
         self.app.add_api_route("/add_two", self.add_two, methods=["POST"])
-        self.app.add_api_route("/hello_world", self.hello_world, methods=["POST"])
+        self.app.add_api_route("/hello_world", self.hello_world, methods=["GET"])
     
     async def add_two(self, request: Request):
         body = await request.json()

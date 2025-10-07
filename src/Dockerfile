@@ -15,4 +15,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD ["/usr/local/bin/python3", "/app/agent.py"] 
+CMD ["/usr/local/bin/python3", "/app/main.py"] 
