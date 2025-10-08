@@ -31,12 +31,12 @@ fi
 
 echo
 echo "Directory: $DIR_NAME"
-echo "Polling for proof (timeout: 100s)..."
+echo "Polling for proof (timeout: 150s)..."
 echo
 
 # Poll for proof with 100 second total timeout
 START_TIME=$(date +%s)
-TIMEOUT=100
+TIMEOUT=150
 
 while true; do
     ELAPSED=$(($(date +%s) - START_TIME))
