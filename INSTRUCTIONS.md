@@ -23,12 +23,12 @@ This guide walks you through deploying a TEE-based agent on AWS Nitro Enclaves a
 ### 1. Clone and Configure
 
 ```bash
-# Clone the repository
-git clone <repo-url>
+# Clone the repository, or your own fork
+git clone https://github.com/sparsity-xyz/sparsity-trustless-agents-framework.git
 cd sparsity-trustless-agents-framework
 
 # Copy environment template
-cp env.example .env
+cp .env.example .env
 
 # Edit .env with your values
 nano .env
