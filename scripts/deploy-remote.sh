@@ -16,7 +16,7 @@ ENCLAVE_CPU_COUNT=${ENCLAVE_CPU_COUNT:-2}
 
 # Terminate existing enclaves
 echo "Terminating existing enclaves..."
-ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "HOME=/home/$EC2_USER nitro-cli terminate-enclave --all || true"
+ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "HOME=/home/$EC2_USER sudo nitro-cli terminate-enclave --all || true"
 
 # Copy src/ to remote
 echo "Copying source files..."
@@ -39,8 +39,8 @@ ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "~/venv/bin/pip install  --index-url
 
 # Start host proxy
 echo "Starting host proxy in background..."
-ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "pkill python || true"
-ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app/host && sudo ~/venv/bin/python3 host.py --vsock --cid 16 --server-port 80 > ~/host.log 2>&1 &"
+ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "sudo pkill python3 || true"
+ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "sudo ~/venv/bin/python3 -m nitro_toolkit.host.main --vsock --cid 16 --server-port 80 > ~/host.log 2>&1 &"
 
 sleep 2
 
