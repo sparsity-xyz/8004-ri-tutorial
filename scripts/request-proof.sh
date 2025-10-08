@@ -10,16 +10,23 @@ source .env
 
 PROOF_PATH=${PROOF_PATH:-proof.json}
 
+# Check required variables
+if [ -z "$ETH_PROVER_SERVICE_URL" ] || [ -z "$ATTESTATION_URL" ] || [ -z "$ETH_ADDRESS" ]; then
+    echo "Error: ETH_PROVER_SERVICE_URL, ATTESTATION_URL, and ETH_ADDRESS must be set in .env"
+    exit 1
+fi
+
 echo "=== Nitro Attestation Proof Service ==="
 echo "Service URL: $ETH_PROVER_SERVICE_URL"
 echo "Attestation URL: $ATTESTATION_URL"
+echo "ETH Address: $ETH_ADDRESS"
 echo
 
 # Upload attestation
 echo "Uploading attestation..."
 RESPONSE=$(curl -s -X POST "$ETH_PROVER_SERVICE_URL/upload" \
     -H "Content-Type: application/json" \
-    -d "{\"url\": \"$ATTESTATION_URL\"}")
+    -d "{\"url\": \"$ATTESTATION_URL\", \"eth_address\": \"$ETH_ADDRESS\"}")
 
 echo "$RESPONSE" | jq .
 DIR_NAME=$(echo "$RESPONSE" | jq -r '.directory_name')
