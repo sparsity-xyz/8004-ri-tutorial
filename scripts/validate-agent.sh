@@ -14,18 +14,56 @@ if [ -z "$REGISTRY" ] || [ -z "$RPC_URL" ] || [ -z "$PRIVATE_KEY" ]; then
     exit 1
 fi
 
-# Read parameters
+# Default parameters (can be overridden by environment or CLI)
 PROOF_PATH=${PROOF_PATH:-proof.json}
 AGENT_ID=${AGENT_ID:-123}
 AGENT_URL=${AGENT_URL:-"http://example.com"}
 TEE_ARCH=${TEE_ARCH:-"nitro"}
+
+# CLI argument parsing to allow passing proof path
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -p|--proof-path)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                PROOF_PATH="$2"
+                shift 2
+            else
+                echo "Error: $1 requires a value"
+                exit 1
+            fi
+            ;;
+        --proof-path=*)
+            PROOF_PATH="${1#*=}"
+            shift
+            ;;
+        -h|--help)
+            echo "Usage: $0 [--proof-path PATH]"
+            echo
+            echo "Options:"
+            echo "  -p, --proof-path PATH   Path to proof JSON (overrides .env PROOF_PATH)"
+            echo "  -h, --help              Show this help message"
+            exit 0
+            ;;
+        *)
+            echo "Error: Unknown argument: $1"
+            exit 1
+            ;;
+    esac
+done
 
 echo "=== Validating Agent with TEEValidationRegistry ==="
 echo "Registry: $REGISTRY"
 echo "Agent ID: $AGENT_ID"
 echo "URL: $AGENT_URL"
 echo "TEE Arch: $TEE_ARCH"
+echo "Proof path: $PROOF_PATH"
 echo
+
+# Ensure proof file exists
+if [ ! -f "$PROOF_PATH" ]; then
+    echo "Error: proof file not found at '$PROOF_PATH'"
+    exit 1
+fi
 
 # Parse proof JSON
 JOURNAL=$(jq -r '.raw_proof.journal' "$PROOF_PATH")
