@@ -16,13 +16,11 @@ fi
 
 # Read parameters
 PROOF_PATH=${PROOF_PATH:-proof.json}
-AGENT_ID=${AGENT_ID:-123}
 AGENT_URL=${AGENT_URL:-"http://example.com"}
 TEE_ARCH=${TEE_ARCH:-"nitro"}
 
 echo "=== Validating Agent with TEEValidationRegistry ==="
 echo "Registry: $REGISTRY"
-echo "Agent ID: $AGENT_ID"
 echo "URL: $AGENT_URL"
 echo "TEE Arch: $TEE_ARCH"
 echo
@@ -71,9 +69,8 @@ echo
 
 # Call validateAgent with correct parameter order from interface
 echo "Calling validateAgent..."
-cast send "$REGISTRY" \
-    "validateAgent(uint256,string,bytes32,uint8,bytes,bytes)" \
-    "$AGENT_ID" \
+RESULT=$(cast send "$REGISTRY" \
+    "validateAgent(string,bytes32,uint8,bytes,bytes)" \
     "$AGENT_URL" \
     "$TEE_ARCH_BYTES32" \
     "$ZK_TYPE_ENUM" \
@@ -81,8 +78,23 @@ cast send "$REGISTRY" \
     "$ONCHAIN_PROOF" \
     --rpc-url "$RPC_URL" \
     --private-key "$PRIVATE_KEY" \
-    --gas-limit 3000000
+    --gas-limit 3000000 \
+    --json)
 
-echo
-echo "=== Agent validated successfully! ==="
+echo "$RESULT"
+
+# Extract agent ID from event logs (second topic in the AgentValidated event)
+AGENT_ID=$(echo "$RESULT" | jq -r '.logs[0].topics[1]' 2>/dev/null)
+
+if [ -n "$AGENT_ID" ] && [ "$AGENT_ID" != "null" ]; then
+    # Convert hex to decimal
+    AGENT_ID_DEC=$((AGENT_ID))
+    echo
+    echo "=== Agent validated successfully! ==="
+    echo "Agent ID: $AGENT_ID_DEC (hex: $AGENT_ID)"
+else
+    echo
+    echo "=== Agent validated successfully! ==="
+    echo "Warning: Could not extract agent ID from transaction"
+fi
 
