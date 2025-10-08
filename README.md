@@ -16,9 +16,11 @@ Before using Sparsity's offerings, ensure you have an AWS Nitro Enclaves environ
 
 see [AWS_Nitro_Enclave_Runtime.md](AWS_Nitro_Enclave_Runtime.md) for details.
 
-### BuildETH 2025 - Oct 9
+**BuildETH 2025 - Oct 9**
 
 For participants in "BuildETH 2025", please join our [Discord channel](https://discord.com/channels/1249529367986569277/1424654814423289877) to get FREE access to ec2 instances to build your first TEE app.
+
+Submit your application here: [Lab env application](https://docs.google.com/forms/d/e/1FAIpQLSd-VVhQdfgUlH1F1lyT4mwjdgZQNESZQxl5tGamrRXLlQvZHA/viewform)
 
 ## Use enclave-toolkit to build TEE agents
 
