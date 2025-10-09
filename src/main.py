@@ -34,22 +34,41 @@ class App(BaseNitroEnclaveApp):
 
 
     def add_endpoints(self):
-        self.app.add_api_route("/add_two", self.add_two, methods=["POST"])
-        self.app.add_api_route("/hello_world", self.hello_world, methods=["GET"])
-        self.app.add_api_route("/chat", self.chat, methods=["POST"])
         # Agent card endpoints (human + well-known)
         self.app.add_api_route("/agent_card", self.agent_card, methods=["GET"])
         self.app.add_api_route("/.well-known/agent.json", self.agent_well_known, methods=["GET"])
+
+        # toy examples
+        self.app.add_api_route("/hello_world", self.hello_world, methods=["GET"])
+        self.app.add_api_route("/add_two", self.add_two, methods=["POST"])
+
+        # agent example
+        self.app.add_api_route("/chat", self.chat, methods=["POST"])
+
     
+    async def agent_card(self, request: Request):
+        # Return JSON metadata card
+        return JSONResponse(self.build_agent_card())
+
+    async def agent_well_known(self, request: Request):
+        # Add short cache headers for discovery crawlers
+        card = self.build_agent_card()
+        resp = JSONResponse(card)
+        resp.headers["Cache-Control"] = "public, max-age=300"
+        return resp
+
+
+    async def hello_world(self, request: Request):
+        return self.response("Hello World")
+
     async def add_two(self, request: Request):
         body = await request.json()
         a = body.get("a")
         b = body.get("b")
         return self.response(str(int(a) + int(b)))
 
-    async def hello_world(self, request: Request):
-        return self.response("Hello World")
-
+    
+    # please modify this function to build your own agent leveraging LLMs 
     async def chat(self, request: Request):
         body = await request.json()
         prompt = body.get("prompt")
@@ -69,19 +88,6 @@ class App(BaseNitroEnclaveApp):
         logger.info(response.json())
             
         return self.response(response.json()["choices"][0]["message"]["content"])
-
-    async def agent_card(self, request: Request):
-        # Return JSON metadata card
-        return JSONResponse(self.build_agent_card())
-
-    async def agent_well_known(self, request: Request):
-        # Add short cache headers for discovery crawlers
-        card = self.build_agent_card()
-        resp = JSONResponse(card)
-        resp.headers["Cache-Control"] = "public, max-age=300"
-        return resp
-
-
 
 
 if __name__ == "__main__":
