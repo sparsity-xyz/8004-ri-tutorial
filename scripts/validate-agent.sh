@@ -174,6 +174,7 @@ TOTAL=$((END_TIME-START_TIME))
 if [ -n "$AGENT_ID" ] && [ "$AGENT_ID" != "null" ]; then
     AGENT_ID_DEC=$((AGENT_ID))
     success "Agent validated successfully"
+    info "Agent ID (uint256): $AGENT_ID_DEC"
     info "Agent ID (hex): $AGENT_ID"
 else
     success "Agent validated (no AgentValidated event parsed)"
@@ -234,6 +235,7 @@ if [ -n "$EXPLORER_BASE" ]; then
         # Agent ID is a hex topic (bytes32). Provide a log search hint.
     SEARCH_ID=$(echo "$AGENT_ID" | sed 's/^0x//')
     highlight "Search logs for Agent ID topic: $SEARCH_ID"
+    highlight "Agent ID (uint256): $AGENT_ID_DEC"
     fi
 else
     warn "Could not derive explorer URL (set NETWORK env var e.g. NETWORK=base-sepolia for links)"
