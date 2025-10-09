@@ -88,13 +88,16 @@ step "Uploading attestation"
 UPLOAD_RESPONSE=$(curl -s -X POST "$ETH_PROVER_SERVICE_URL/upload" -H "Content-Type: application/json" -d "{\"url\": \"$ATTESTATION_URL\", \"eth_address\": \"$ETH_ADDRESS\"}")
 
 if ! echo "$UPLOAD_RESPONSE" | jq . >/dev/null 2>&1; then
-    warn "Upload response not valid JSON"; echo "$UPLOAD_RESPONSE"
+    warn "Upload response not valid JSON"
+    echo "$UPLOAD_RESPONSE"
+else
+    info "Upload response:"
+    echo "$UPLOAD_RESPONSE" | jq .
 fi
+
 DIR_NAME=$(echo "$UPLOAD_RESPONSE" | jq -r '.directory_name' 2>/dev/null || true)
 if [ -z "$DIR_NAME" ] || [ "$DIR_NAME" = "null" ]; then
     err "Upload failed (no directory_name in response)"; 
-    # show full response for debugging
-    echo "$UPLOAD_RESPONSE";
     exit 1; 
 fi
 success "Upload accepted (directory: $DIR_NAME)"
@@ -114,8 +117,7 @@ while true; do
         200)
             success "Proof ready (elapsed ${ELAPSED}s)"
             if [ -z "$OUTPUT_FILE" ]; then
-                TS=$(date -u +%Y%m%dT%H%M%SZ)
-                OUTPUT_FILE="proof_${DIR_NAME}_${TS}.json"
+                OUTPUT_FILE="proof_${DIR_NAME}.json"
             fi
             echo "$BODY" > "$OUTPUT_FILE"
             success "Saved proof to $OUTPUT_FILE"
@@ -138,6 +140,10 @@ while true; do
             info "[${ELAPSED}s] Processing (HTTP 202)"
             STAGE=$(echo "$BODY" | jq -r '.stage // empty' 2>/dev/null || true)
             [ -n "$STAGE" ] && info "Stage: $STAGE"
+            SUCCINCT_EXPLORER_URL=$(echo "$BODY" | jq -r '.succinct_explorer_url // empty' 2>/dev/null || true)
+            if [ -n "$SUCCINCT_EXPLORER_URL" ] && [ "$SUCCINCT_EXPLORER_URL" != "null" ]; then
+                info "Request Succinct Explorer URL: $SUCCINCT_EXPLORER_URL"
+            fi
             sleep "$INTERVAL"
             ;;
         *)
