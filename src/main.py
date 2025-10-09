@@ -73,7 +73,7 @@ class App(BaseNitroEnclaveApp):
         body = await request.json()
         prompt = body.get("prompt")
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=60.0) as client:
             response = await client.post(
                 "https://api.openai.com/v1/chat/completions",
                 headers={
@@ -85,9 +85,13 @@ class App(BaseNitroEnclaveApp):
                     "messages": [{"role": "user", "content": prompt}]
                 }
             )
-        logger.info(response.json())
-            
-        return self.response(response.json()["choices"][0]["message"]["content"])
+        
+        result = response.json()
+        logger.info(result)
+        
+        if "error" in result:
+            return self.response({"error": result["error"]})
+        return self.response(result["choices"][0]["message"]["content"])
 
 
 if __name__ == "__main__":
