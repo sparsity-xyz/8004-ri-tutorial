@@ -1,22 +1,17 @@
 # Sparsity Trustless Agents Framework
 
-<h1 align="center">🚀 Reference Implementation of TEE Registry in <a href="https://8004.org">ERC-8004</a></h1>
+<p align="center">🚀 Reference Implementation of TEE Registry in <a href="https://8004.org">ERC-8004</a></p>
 
 ## Overview
 
 <a href="https://8004.org">ERC-8004</a> defines trustless agents in the Ethereum ecosystem. An important component in 8004 is the validation registry. Validation ensures the integrity of agents through economic-staking or TEE. This repo provides a tutorial on building 8004 agents using TEE on the Sparsity reference implementation. For a deep dive into the 8004 registry design, please see [this doc](https://docs.google.com/document/d/127pkxlBE0048N-MNsX66Ctz5dmRxHvaJRASAr01EVVc/edit?tab=t.0#heading=h.x6rb197jqjog).
 
-
-## Architecture Overview
-
-
-
-
-The Sparsity  Trustless Agents Framework provides a comprehensive solution for building and deploying secure, privacy-preserving applications in a trusted execution environment (TEE). By leveraging AWS Nitro Enclaves, the framework ensures that sensitive data is processed in isolation, protecting it from unauthorized access and potential breaches.
-
 ## Architecture Overview
 
 <img width="944" height="417" alt="Screenshot 2025-10-09 at 1 28 55 AM" src="https://github.com/user-attachments/assets/9058a6aa-ed9a-408f-8802-672e40ed43cf" />
+
+In the 8004 TEE registry, the TEE Registry smart contract stores 
+
 
 ## Three-Layers Solution
 
