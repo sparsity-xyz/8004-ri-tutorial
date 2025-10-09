@@ -47,6 +47,16 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+step "Checking required tools"
+MISSING_TOOLS=()
+for t in curl jq; do
+    command -v "$t" >/dev/null 2>&1 || MISSING_TOOLS+=("$t")
+done
+if [ ${#MISSING_TOOLS[@]} -gt 0 ]; then
+    err "Missing required tools: ${MISSING_TOOLS[*]}"; exit 1
+fi
+success "Toolchain OK (curl, jq)"
+
 START_TS_READABLE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 START_TIME=$(date +%s)
 
