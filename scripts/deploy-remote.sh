@@ -95,7 +95,7 @@ success "Enclave launch command executed"
 
 # Generate curl command for /agent_card endpoint
 step "Generating curl command for enclave API (/agent_card)"
-CURL_CMD="curl -s http://$EC2_HOST/agent_card"
+CURL_CMD="curl -s http://$EC2_HOST/agent_card | jq"
 info "You can invoke the enclave endpoint with:"
 echo "  $CURL_CMD"
 
