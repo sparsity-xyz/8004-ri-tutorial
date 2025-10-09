@@ -15,14 +15,14 @@ class App(BaseNitroEnclaveApp):
     def build_agent_card(self):
         return {
             "name": os.getenv("AGENT_NAME", "SampleEnclaveAgent"),
-            "description": os.getenv("AGENT_DESCRIPTION", "Example Nitro Enclave based trusted agent"),
+            "description": os.getenv("AGENT_DESCRIPTION", "Example Nitro-enclave-based trustless agent"),
             "version": os.getenv("AGENT_VERSION", "0.1.0"),
             "schema_version": 1,
             "tee_arch": os.getenv("TEE_ARCH", "nitro"),
-            "zk_type": os.getenv("ZK_TYPE", "Risc0"),
+            "zk_type": os.getenv("ZK_TYPE", "Succinct"),
             "registry": os.getenv("REGISTRY", ""),
             "network": os.getenv("NETWORK", ""),
-            "endpoints": ["/add_two", "/hello_world", "/agent_card", "/.well-known/agent.json"],
+            "endpoints": ["/agent_card", "/.well-known/agent.json", "/add_two", "/hello_world", "/chat"],
             "attestation_endpoint": os.getenv("ATTESTATION_PATH", "/attestation"),
             "timestamp": int(time.time()),
         }
