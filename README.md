@@ -20,7 +20,7 @@ see [AWS_Nitro_Enclave_Runtime.md](AWS_Nitro_Enclave_Runtime.md) for details.
 
 Participants in BuildETH 2025 can request free EC2 access to build their first TEE application. Join our discussion via our Discord channel:
 
-- Discord: https://discord.com/channels/1249529367986569277/1424654814423289877
+- Discord: https://discord.gg/2C5eTvxW
 
 To apply for a lab environment, submit this form:
 
@@ -69,7 +69,7 @@ More details coming soon.
 
 If you run into issues or have questions, here are the best ways to reach us:
 
-- Discord: join our community and ask in the support channel — https://discord.com/channels/1249529367986569277/1424654814423289877
+- Discord: join our community and ask in the support channel — https://discord.gg/HCnFr7M3
 - Email: send detailed issues to support@sparsity.xyz (include repo, branch, steps to reproduce, and any logs)
 - X (Twitter): mention @sparsity_xyz for short questions or announcements
 - GitHub: open an issue in this repository with the bug or feature request — include reproduction steps and relevant logs
