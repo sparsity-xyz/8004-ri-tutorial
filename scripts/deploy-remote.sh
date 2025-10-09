@@ -100,3 +100,5 @@ info "You can invoke the enclave endpoint with:"
 echo "  $CURL_CMD"
 
 success "Deployment workflow completed"
+
+

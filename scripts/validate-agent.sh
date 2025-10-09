@@ -13,6 +13,9 @@ success(){ printf "%b%s%b\n" "${GREEN}" "[OK] $*" "${RESET}"; }
 warn(){ printf "%b%s%b\n" "${YELLOW}" "[WARN] $*" "${RESET}"; }
 err(){ printf "%b%s%b\n" "${RED}" "[ERROR] $*" "${RESET}" 1>&2; }
 
+# High-visibility helper (bold yellow) - respects NO_COLOR
+highlight(){ if [ "${NO_COLOR:-0}" = "1" ]; then printf "%s\n" "[INFO] $*"; else printf "%b%s%b\n" "${BOLD}${YELLOW}" "[NEXT] $*" "${RESET}"; fi }
+
 trap 'err "Script failed at line $LINENO"; exit 1' ERR
 
 START_TIME=$(date +%s)
@@ -205,14 +208,14 @@ if [ -n "$EXPLORER_BASE" ]; then
     TXS_URL="$CONTRACT_URL#transactions"
     EVENTS_URL="$CONTRACT_URL#events"
     READ_URL="$CONTRACT_URL#readContract"
-    info "Contract:    $CONTRACT_URL"
-    info "Transactions:$TXS_URL"
-    info "Events:      $EVENTS_URL"
-    info "Read:        $READ_URL"
+    highlight "Contract:    $CONTRACT_URL"
+    highlight "Transactions:$TXS_URL"
+    highlight "Events:      $EVENTS_URL"
+    highlight "Read:        $READ_URL"
     if [ -n "$AGENT_ID" ] && [ "$AGENT_ID" != "null" ]; then
         # Agent ID is a hex topic (bytes32). Provide a log search hint.
-        SEARCH_ID=$(echo "$AGENT_ID" | sed 's/^0x//')
-        info "Search logs for Agent ID topic: $SEARCH_ID"
+    SEARCH_ID=$(echo "$AGENT_ID" | sed 's/^0x//')
+    highlight "Search logs for Agent ID topic: $SEARCH_ID"
     fi
 else
     warn "Could not derive explorer URL (set NETWORK env var e.g. NETWORK=base-sepolia for links)"

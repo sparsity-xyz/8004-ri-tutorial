@@ -15,6 +15,7 @@ step(){ [ "$QUIET" = "1" ] || printf "%b%s%b\n" "${BOLD}${BLUE}" "==> $*" "${RES
 success(){ [ "$QUIET" = "1" ] || printf "%b%s%b\n" "${GREEN}" "[OK] $*" "${RESET}"; }
 warn(){ [ "$QUIET" = "1" ] || printf "%b%s%b\n" "${YELLOW}" "[WARN] $*" "${RESET}"; }
 err(){ printf "%b%s%b\n" "${RED}" "[ERROR] $*" "${RESET}" 1>&2; }
+highlight(){ [ "$QUIET" = "1" ] || printf "%b%s%b\n" "${BOLD}${YELLOW}" "[NEXT] $*" "${RESET}"; }
 
 trap 'err "Script failed at line $LINENO"; exit 1' ERR
 
@@ -80,7 +81,12 @@ if ! echo "$UPLOAD_RESPONSE" | jq . >/dev/null 2>&1; then
     warn "Upload response not valid JSON"; echo "$UPLOAD_RESPONSE"
 fi
 DIR_NAME=$(echo "$UPLOAD_RESPONSE" | jq -r '.directory_name' 2>/dev/null || true)
-if [ -z "$DIR_NAME" ] || [ "$DIR_NAME" = "null" ]; then err "Upload failed (no directory_name in response)"; exit 1; fi
+if [ -z "$DIR_NAME" ] || [ "$DIR_NAME" = "null" ]; then
+    err "Upload failed (no directory_name in response)"; 
+    # show full response for debugging
+    echo "$UPLOAD_RESPONSE";
+    exit 1; 
+fi
 success "Upload accepted (directory: $DIR_NAME)"
 
 step "Polling for proof"
@@ -115,7 +121,7 @@ while true; do
             info "Directory: $DIR_NAME"
             info "Elapsed: ${TOTAL}s"
             info "Output: $OUTPUT_FILE"
-            info "Next: ./scripts/validate-agent.sh --proof-path $OUTPUT_FILE"
+            highlight "Next: ./scripts/validate-agent.sh --proof-path $OUTPUT_FILE"
             exit 0
             ;;
         202)
