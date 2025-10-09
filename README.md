@@ -42,9 +42,9 @@ You can follow the guidance in [Develop your agent with enclave-toolkit](xxx.md)
 
 Or a simpler way is to start is to fork this repository and begin from the working example application under the `src/` folder, then follow the [Deployment Guide](Deploy_Enclave_Agents.md) to deploy your agent to an AWS Nitro Enclave.
 
-## 2. Use trustless-agent-framework to build 8004-compliant TEE agents
+## 2. Use trustless-agent-framework to validate 8004-compliant TEE agents
 
-ERC-8004 provides a standard for discovering agents and establishing trust through reputation and validation.
+[ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) provides a standard for discovering agents and establishing trust through reputation and validation.
 
 For agents running inside a TEE environment, our `trustless-agent-framework` delivers an end-to-end solution to:
 
@@ -59,7 +59,9 @@ On-chain registry contract: [8004-compliant registry](https://sepolia.basescan.o
 Agent explorer / discovery URL: [Agent explorer](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460)
 
 
-## 3. Use Nova to deploy agents to Sparsity-run TEE cloud
+## 3. Use Nova Platform to deploy agents to Sparsity-run TEE cloud
+
+Similar to Vercel for websites, Nova is designed specifically for TEE applications
 
 More details coming soon.
 
