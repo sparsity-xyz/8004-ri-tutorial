@@ -18,7 +18,7 @@ see [AWS_Nitro_Enclave_Runtime.md](AWS_Nitro_Enclave_Runtime.md) for details.
 
 **BuildETH 2025 — Oct 9**
 
-Participants in BuildETH 2025 can request free EC2 access to build their first TEE application. Join our discussion and request access via our Discord channel:
+Participants in BuildETH 2025 can request free EC2 access to build their first TEE application. Join our discussion via our Discord channel:
 
 - Discord: https://discord.com/channels/1249529367986569277/1424654814423289877
 
@@ -40,7 +40,7 @@ Using our `enclave-toolkit` makes developing your enclave agent much simpler by 
 
 You can follow the guidance in [Develop your agent with enclave-toolkit](xxx.md) to get started.
 
-Or a simpler way is to start is to fork this repository and begin from the working example application under the `src/` folder, then follow the [Deployment Guide](Deploy_Enclave_Agents.md) to deploy your agent to an AWS Nitro Enclave and register it on the registry.
+Or a simpler way is to start is to fork this repository and begin from the working example application under the `src/` folder, then follow the [Deployment Guide](Deploy_Enclave_Agents.md) to deploy your agent to an AWS Nitro Enclave.
 
 ## Use trustless-agent-framework to build 8004-compliant TEE agents
 
@@ -52,9 +52,9 @@ For agents running inside a TEE environment, our `trustless-agent-framework` del
 - Publish and validate the agent in an on-chain ERC-8004-compatible registry
 - Enable discovery and reputation tracking so your agent can be found and trusted by a large audience
 
-You can follow the the [Validation Guide](Validate_Enclave_Agents.md) to get your agent validated in 8004-compliant registry.
+You can follow the [Validation Guide](Validate_Enclave_Agents.md) to get your agent validated in 8004-compliant registry.
 
-On-chain registry address: [8004-compliant registry](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460)
+On-chain registry contract: [8004-compliant registry](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460)
 
 Agent explorer / discovery URL: [Agent explorer](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460)
 
@@ -62,3 +62,20 @@ Agent explorer / discovery URL: [Agent explorer](https://sepolia.basescan.org/ad
 ## Use Nova to deploy agents to Sparsity-run TEE cloud
 
 More details coming soon.
+
+## Support
+
+If you run into issues or have questions, here are the best ways to reach us:
+
+- Discord: join our community and ask in the support channel — https://discord.com/channels/1249529367986569277/1424654814423289877
+- Email: send detailed issues to support@sparsity.xyz (include repo, branch, steps to reproduce, and any logs)
+- X (Twitter): mention @sparsity_xyz for short questions or announcements
+- GitHub: open an issue in this repository with the bug or feature request — include reproduction steps and relevant logs
+
+When opening an issue or contacting support, please include:
+
+1. The command you ran and the expected vs actual result
+2. Environment details (OS, Docker/Nitro versions, AWS region)
+3. Relevant log excerpts or error messages
+
+We aim to respond within 48 hours for community channels and email depending on volume.
