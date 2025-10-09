@@ -55,7 +55,7 @@ success "Terminate command issued"
 # Copy src/ to remote
 step "Copying source files"
 ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "mkdir -p ~/app"
-if scp -i "$EC2_PEM_KEY" -r src/* "$EC2_USER@$EC2_HOST:~/app/"; then
+if scp -i "$EC2_PEM_KEY" -r src/. "$EC2_USER@$EC2_HOST:~/app/"; then
     success "Sources copied"
 else
     err "Failed to copy sources"; exit 1
