@@ -24,7 +24,7 @@ Participants in BuildETH 2025 can request free EC2 access to build their first T
 
 To apply for a lab environment, submit this form:
 
-- Lab environment application: https://docs.google.com/forms/d/e/1FAIpQLSd-VVhQdfgUlH1F1lyT4mwjdgZQNESZQxl5tGamrRXLlQvZHA/viewform
+- Lab environment application: https://tinyurl.com/sparsity-8004-lab
 
 ## 1. Use enclave-toolkit to build TEE agents
 
