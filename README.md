@@ -30,6 +30,8 @@ To apply for a lab environment, submit this form:
 
 - Lab environment application: https://tinyurl.com/sparsity-8004-lab
 
+<img width="300" alt="QR Code for application" src="online-application.png" />
+
 ## 1. Use enclave-toolkit to build TEE agents
 
 AWS provides the Nitro Enclaves solution as a TEE environment. However, implementing a fully-functional agent inside a Nitro Enclave requires developers to handle several platform and integration concerns themselves — for example:
@@ -42,9 +44,7 @@ AWS provides the Nitro Enclaves solution as a TEE environment. However, implemen
 
 Using our `enclave-toolkit` makes developing your enclave agent much simpler by providing helpers, patterns, and working examples for these common building blocks.
 
-You can follow the guidance in [Develop your agent with enclave-toolkit](xxx.md) to get started.
-
-Or a simpler way is to start is to fork this repository and begin from the working example application under the `src/` folder, then follow the [Deployment Guide](Deploy_Enclave_Agents.md) to deploy your agent to an AWS Nitro Enclave.
+A simpler way is to start is to fork this repository and begin from the working example application under the `src/` folder, then follow the [Deploy Enclave Agents](Deploy_Enclave_Agents.md) to deploy your agent to an AWS Nitro Enclave.
 
 ## 2. Use trustless-agent-framework to validate 8004-compliant TEE agents
 
