@@ -18,7 +18,25 @@ highlight(){ if [ "${NO_COLOR:-0}" = "1" ]; then printf "%s\n" "[INFO] $*"; else
 
 trap 'err "Script failed at line $LINENO"; exit 1' ERR
 
+
+
+
 START_TIME=$(date +%s)
+
+step "Checking required local tools"
+MISSING=()
+for tool in jq cast xxd; do
+    if ! command -v "$tool" >/dev/null 2>&1; then
+        MISSING+=("$tool")
+    fi
+done
+if [ ${#MISSING[@]} -gt 0 ]; then
+    err "Missing required tools: ${MISSING[*]}"
+    echo "Please install them before running this script."
+    echo "Hints:"; echo "  jq   : package manager (e.g. apt install jq / brew install jq)"; echo "  cast : from Foundry (curl -L https://foundry.paradigm.xyz | bash; foundryup)"; echo "  xxd  : usually in vim-common (apt install xxd) or comes with macOS"
+    exit 1
+fi
+success "All required tools present (jq, cast, xxd)"
 
 step "Loading environment variables"
 if [ ! -f .env ]; then

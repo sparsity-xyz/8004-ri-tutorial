@@ -59,7 +59,7 @@ This diagram shows how developers build using the Enclave Toolkit (Layer 1), mak
 ---
 
 ## Layer 2: Trustless Agent (8004 Compliant)
-**Purpose:** Help developers build AWS TEE applications that comply with NIST 800-4 standards for trustless agents.
+**Purpose:** Help developers build AWS TEE applications that comply with ERC-8004 standards for trustless agents.
 
 **Features:**
 - **8004 Registry:** Maintains a registry of compliant agents and applications.
