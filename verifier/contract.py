@@ -16,9 +16,6 @@ class TEEValidationRegistryContract:
 
         self.contract = self.w3.eth.contract(address=contract_address, abi=contract_abi)
 
-    def zkVerifier(self) -> str:
-        return self.contract.functions.zkVerifier().call()
-
     def get_agent(self, agent_id: int):
         agent = self.contract.functions.agents(agent_id).call()
         return {
@@ -28,17 +25,6 @@ class TEEValidationRegistryContract:
             "pubkey": agent[3].hex(),
             "url": agent[4],
         }
-
-    def register_agent(self, agent_id: int, code_measurement, pubkey, url, tee_arch, verifier, zk_proof):
-        return self.contract.functions.validateAgent(
-            agent_id,
-            code_measurement,
-            pubkey,
-            url,
-            tee_arch,
-            verifier,
-            zk_proof
-        )
 
     def get_agent_count(self):
         return self.contract.functions.agentCount().call()
