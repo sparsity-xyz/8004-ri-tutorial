@@ -31,9 +31,9 @@ Before using Sparsity's offerings, ensure you have an AWS Nitro Enclaves environ
 
 see [AWS_Nitro_Enclave_Runtime.md](AWS_Nitro_Enclave_Runtime.md) for details.
 
-**BuildETH 2025 — Oct 9**
+**Sparsity Lab Environment**
 
-For participants in BuildETH 2025, to apply for a lab environment, submit this form:
+For participants in BuildETH 2025, you can apply for a lab environment by submitting this form:
 
 - Lab environment application: https://tinyurl.com/sparsity-8004-lab
 
@@ -65,7 +65,7 @@ You are encouraged to modify `src/agent.json` to customize your agent's metadata
 
 You can also modify other files in the `src/` directory to implement your own agent logic.
 
-NOTE: There is one "/chat" endpoint in the agent code that your agent can integrate with OpenAI. If you want to test this endpoint, make sure you have set up the OpenAI API key in your `src/.env` file.
+NOTE: There is one "/chat" endpoint in the agent code that your agent can integrate with OpenAI. If you want to test this endpoint, make sure you have set up the OpenAI API key in your `src/.env` file (different from the main `.env` file).
 
 ```
 cp src/.env.example src/.env
@@ -80,7 +80,7 @@ If you have modified the agent code, please make sure you have tested locally wi
 ./scripts/deploy-local.sh
 ```
 
-After that, you can deploy your agent to an EC2 Nitro Enclave by running:
+After that, you can deploy your agent to the EC2 Nitro Enclave by running:
 
 ```
 ./scripts/deploy-remote.sh
@@ -159,7 +159,7 @@ We use the generated proof file to register and validate your agent on-chain. Ru
 ./scripts/validate-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json
 ```
 
-NOTE: you can just copy the NEXT command from the output of the previous step.
+NOTE: you can just copy the command from the output of the previous step.
 
 You should see output like below:
 
