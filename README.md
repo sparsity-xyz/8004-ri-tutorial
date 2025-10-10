@@ -12,6 +12,16 @@
 
 In the 8004 TEE registry, the TEE Registry smart contract stores 
 
+## Table of Contents
+
+- [Three-Layers Solution](#three-layers-solution)
+  - [1. Use enclave-toolkit to build TEE agents](#1-use-enclave-toolkit-to-build-tee-agents)
+  - [2. Use trustless-agent-framework to validate 8004-compliant TEE agents](#2-use-trustless-agent-framework-to-validate-8004-compliant-tee-agents)
+  - [3. Use Nova Platform to deploy agents to Sparsity-run TEE cloud](#3-use-nova-platform-to-deploy-agents-to-sparsity-run-tee-cloud)
+- [0. Pre-requisites: AWS Nitro Enclaves Environment](#0-pre-requisites-aws-nitro-enclaves-environment)
+- [BuildETH 2025 — Oct 9](#buildeth-2025-—-oct-9)
+- [Support](#support)
+
 
 ## Three-Layers Solution
 
@@ -19,60 +29,131 @@ Sparsity's layered approach enables developers to quickly build, certify, and de
 
 see [Sparsity Offerings](Sparsity_Offerings.md) for details.
 
-## 0. Pre-requisites: AWS Nitro Enclaves Environment
+## Quick start tutorials
 
-Before using Sparsity's offerings, ensure you have an AWS Nitro Enclaves environment set up. This includes having an AWS account, configuring Nitro Enclaves on your EC2 instances, and setting up necessary IAM roles and permissions.
+The simplest way to get started is to build your agent from our reference implementation.
+
+#### 0. Pre-requisites: AWS Nitro Enclaves Environment
+
+Before using Sparsity's offerings, ensure you have an AWS Nitro Enclaves environment set up. This includes having an AWS account, configuring Nitro Enclaves on your EC2 instances, and installing necessary packages.
 
 see [AWS_Nitro_Enclave_Runtime.md](AWS_Nitro_Enclave_Runtime.md) for details.
 
 **BuildETH 2025 — Oct 9**
 
-Participants in BuildETH 2025 can request free EC2 access to build their first TEE application. Join our discussion via our Discord channel:
-
-- Discord: https://discord.gg/2C5eTvxW
-
-To apply for a lab environment, submit this form:
+For participants in BuildETH 2025, to apply for a lab environment, submit this form:
 
 - Lab environment application: https://tinyurl.com/sparsity-8004-lab
 
-<img width="300" alt="QR Code for application" src="online-application.png" />
+You will receive an email with the necessary details to start your tutorial shortly.
 
-## 1. Use enclave-toolkit to build TEE agents
+#### 1. fork & clone
 
-AWS provides the Nitro Enclaves solution as a TEE environment. However, implementing a fully-functional agent inside a Nitro Enclave requires developers to handle several platform and integration concerns themselves — for example:
+fork this repo to your own GitHub account and clone to your local machine
 
-- proxy-in / proxy-out (host <-> enclave communication)
-- TLS for secure transport
-- Attestation generation and verification
-- KMS integration for secure key operations
-- And other enclave/host interaction plumbing
+```
+git clone https://github.com/[your-username]/sparsity-trustless-agents-framework.git --depth=1
+```
 
-Using our `enclave-toolkit` makes developing your enclave agent much simpler by providing helpers, patterns, and working examples for these common building blocks.
+#### 2. edit .env
 
-A simpler way is to start is to fork this repository and begin from the working example application under the `src/` folder, then follow the [Deploy Enclave Agents](Deploy_Enclave_Agents.md) to deploy your agent to an AWS Nitro Enclave.
+```
+cd sparsity-trustless-agents-framework
+cp .env.example .env
+nano .env
+```
 
-## 2. Use trustless-agent-framework to validate 8004-compliant TEE agents
+Please fill in the required values in `.env` as described in the file. 
 
-[ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) provides a standard for discovering agents and establishing trust through reputation and validation.
+If you have submitted the lab environment application form, you will receive the necessary details via email.
 
-For agents running inside a TEE environment, our `trustless-agent-framework` delivers an end-to-end solution to:
+#### 3. edit agent code
 
-- Generate a zero-knowledge (ZK) proof that attests to the agent's behavior and integrity
-- Publish and validate the agent in an on-chain ERC-8004-compatible registry
-- Enable discovery and reputation tracking so your agent can be found and trusted by a large audience
+You are encouraged to modify `src/agent.json` to customize your agent's metadata.
 
-You can follow the [Validation Guide](Validate_Enclave_Agents.md) to get your agent validated in 8004-compliant registry.
+You can also modify other files in the `src/` directory to implement your own agent logic.
+
+#### 4. build & deploy
+
+If you have modified the agent code, please make sure you have tested locally with Docker first.
+
+```
+./scripts/deploy-local.sh
+```
+
+
+
+After that, you can directly deploy to your agent to EC2 Nitro Enclave by running:
+
+```
+./scripts/deploy-remote.sh
+```
+If everything goes well, you should see output like below:
+
+```
+...
+==> Running enclave in debug mode
+Start allocating memory...
+Started enclave with enclave-cid: 16, memory: 4096 MiB, cpu-ids: [1, 3]
+{
+  "EnclaveName": "test-app",
+  "EnclaveID": "i-0f881432b6288ad0f-enc199cc4a57a29c28",
+  "ProcessID": 28667,
+  "EnclaveCID": 16,
+  "NumberOfCPUs": 2,
+  "CPUIDs": [
+    1,
+    3
+  ],
+  "MemoryMiB": 4096
+}
+[OK] Enclave launch command executed
+==> Generating curl command for enclave API (/agent.json)
+[INFO] You can invoke the enclave endpoint with:
+  curl -s http://[EC2_HOST]/agent.json | jq
+[OK] Deployment workflow completed
+```
+
+#### 5. request zk proof
+
+
+```
+./scripts/request-proof.sh
+```
+
+#### 6. register & validate
+
+```
+hello
+```
+
+#### 6. register & validate
+
+```
+./scripts/register-agent.sh -p <your-proof-file>
+```
+
+#### 7. play with your agent
+
+
+#### 8. explore agents 
+
+list all agents:
+```
+./scripts/explore-agents.sh
+```
+get details of your agent:
+```
+./scripts/explore-agents.sh --agent-id <your_agent_id>
+```
+
+
+## Related Links
 
 On-chain registry contract: [8004-compliant registry](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460)
 
 Agent explorer / discovery URL: [Agent explorer](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460)
 
-
-## 3. Use Nova Platform to deploy agents to Sparsity-run TEE cloud
-
-Similar to Vercel for websites, Nova is designed specifically for TEE applications
-
-More details coming soon.
 
 ## Support
 
