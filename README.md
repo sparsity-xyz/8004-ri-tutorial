@@ -12,28 +12,20 @@
 
 In the 8004 TEE registry, the TEE Registry smart contract stores 
 
-## Table of Contents
-
-- [Three-Layers Solution](#three-layers-solution)
-  - [1. Use enclave-toolkit to build TEE agents](#1-use-enclave-toolkit-to-build-tee-agents)
-  - [2. Use trustless-agent-framework to validate 8004-compliant TEE agents](#2-use-trustless-agent-framework-to-validate-8004-compliant-tee-agents)
-  - [3. Use Nova Platform to deploy agents to Sparsity-run TEE cloud](#3-use-nova-platform-to-deploy-agents-to-sparsity-run-tee-cloud)
-- [0. Pre-requisites: AWS Nitro Enclaves Environment](#0-pre-requisites-aws-nitro-enclaves-environment)
-- [BuildETH 2025 — Oct 9](#buildeth-2025-—-oct-9)
-- [Support](#support)
-
-
-## Three-Layers Solution
-
-Sparsity's layered approach enables developers to quickly build, certify, and deploy secure TEE applications with minimal friction, leveraging both AWS Nitro Enclaves and advanced compliance and hosting solutions.
-
-see [Sparsity Offerings](Sparsity_Offerings.md) for details.
-
-## Quick start tutorials
+## Quick start
 
 The simplest way to get started is to build your agent from our reference implementation.
 
-#### 0. Pre-requisites: AWS Nitro Enclaves Environment
+  - [0. Pre-requisites: AWS Nitro Enclaves Environment](#0-pre-requisites-aws-nitro-enclaves-environment)
+  - [1. Fork & Clone](#1-fork--clone)
+  - [2. Edit .env for Nitro Enclave Runtime and Base Sepolia Setup](#2-edit-env-for-nitro-enclave-runtime-and-base-sepolia-setup)
+  - [3. Edit Agent Code](#3-edit-agent-code)
+  - [4. Build & Deploy Your Agent](#4-build--deploy-your-agent)
+  - [5. Request ZK Proof of Your Agent](#5-request-zk-proof-of-your-agent)
+  - [6. Register & Validate Your Agent](#6-register--validate-your-agent)
+  - [7. Explore Agents](#7-explore-agents)
+
+### 0. Pre-requisites: AWS Nitro Enclaves Environment
 
 Before using Sparsity's offerings, ensure you have an AWS Nitro Enclaves environment set up. This includes having an AWS account, configuring Nitro Enclaves on your EC2 instances, and installing necessary packages.
 
@@ -47,15 +39,15 @@ For participants in BuildETH 2025, to apply for a lab environment, submit this f
 
 You will receive an email with the necessary details to start your tutorial shortly.
 
-#### 1. fork & clone
+### 1. Fork & Clone
 
-fork this repo to your own GitHub account and clone to your local machine
+Fork this repo to your own GitHub account, then clone it to your local machine.
 
 ```
 git clone https://github.com/[your-username]/sparsity-trustless-agents-framework.git --depth=1
 ```
 
-#### 2. edit .env
+### 2. Edit .env for Nitro Enclave Runtime and Base Sepolia Setup
 
 ```
 cd sparsity-trustless-agents-framework
@@ -67,13 +59,15 @@ Please fill in the required values in `.env` as described in the file.
 
 If you have submitted the lab environment application form, you will receive the necessary details via email.
 
-#### 3. edit agent code
+### 3. Edit Agent Code
 
-You are encouraged to modify `src/agent.json` to customize your agent's metadata.
+You are encouraged to modify `/src/agent.json` to customize your agent's metadata. 
 
 You can also modify other files in the `src/` directory to implement your own agent logic.
 
-#### 4. build & deploy
+NOTE: There is one "/chat" endpoint in the agent code that your agent can integrate with OpenAI. If you want to test this endpoint, make sure you have set up the OpenAI API key in your `/src/.env` file.
+
+### 4. Build & Deploy Your Agent
 
 If you have modified the agent code, please make sure you have tested locally with Docker first.
 
@@ -81,9 +75,7 @@ If you have modified the agent code, please make sure you have tested locally wi
 ./scripts/deploy-local.sh
 ```
 
-
-
-After that, you can directly deploy to your agent to EC2 Nitro Enclave by running:
+After that, you can deploy your agent to an EC2 Nitro Enclave by running:
 
 ```
 ./scripts/deploy-remote.sh
@@ -114,46 +106,100 @@ Started enclave with enclave-cid: 16, memory: 4096 MiB, cpu-ids: [1, 3]
 [OK] Deployment workflow completed
 ```
 
-#### 5. request zk proof
+Then you can play with your agent!
 
+```
+export EC2_HOST=[your-ec2-public-ip]
+
+curl -s http://$EC2_HOST/agent.json | jq
+
+curl -X POST http://$EC2_HOST/add_two \
+    -H "Content-Type: application/json" \
+    -d '{"a": 2, "b": 2}'
+
+# requires OpenAI API key set in /src/.env before build and deploy
+curl -X POST http://$EC2_HOST/chat \
+    -H "Content-Type: application/json" \
+    -d '{"prompt": "What is 2+2?"}'
+
+```
+### 5. Request ZK Proof of Your Agent
+
+After deployment, you can request a ZK proof of your agent by running:
 
 ```
 ./scripts/request-proof.sh
 ```
 
-#### 6. register & validate
+It will take around 60 seconds to generate the ZK proof. This will generate a proof file in the current directory. If successful, you should see output like below:
 
 ```
-hello
+...
+[OK] Proof ready (elapsed 65s)
+[OK] Saved proof to proof_c929d31acdd3cf31_20251010041858969.json
+[OK] Proof file structure validated
+
+==> Summary
+[INFO] Directory: c929d31acdd3cf31_20251010041858969
+[INFO] Elapsed: 65s
+[INFO] Output: proof_c929d31acdd3cf31_20251010041858969.json
+[NEXT] Next: ./scripts/validate-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json 
 ```
 
-#### 6. register & validate
+### 6. Register & Validate Your Agent
+
+We use the generated proof file to register and validate your agent on-chain. Run:
 
 ```
-./scripts/register-agent.sh -p <your-proof-file>
+./scripts/validate-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json
 ```
 
-#### 7. play with your agent
+NOTE: you can just copy the NEXT command from the output of the previous step.
+
+You should see output like below:
+
+```
+[OK] Agent validated successfully
+[INFO] Agent ID (uint256): 25
+[INFO] Agent ID (hex): 0x0000000000000000000000000000000000000000000000000000000000000019
+==> Summary
+[INFO] Elapsed: 1s
+[INFO] Registry: 0x3dfA3C604aE238E03DfE63122Edd43A4aD916460
+[INFO] Agent URL: 3.101.88.86
+[INFO] Proof: proof_c929d31acdd3cf31_20251010041858969.json
+[INFO] Next: Update agent metadata / publish discovery record if required
+==> Explorer references
+[NEXT] Contract:    https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460
+[NEXT] Transactions:https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460#transactions
+[NEXT] Events:      https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460#events
+[NEXT] Read:        https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460#readContract
+[NEXT] Search logs for Agent ID topic: 0000000000000000000000000000000000000000000000000000000000000019
+[NEXT] Agent ID (uint256): 25
+```
+
+Now your agent is registered and validated on-chain! You should be able to see your agent in the [Agent explorer](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460).
 
 
-#### 8. explore agents 
+### 7. Explore Agents
 
-list all agents:
+List all agents:
 ```
 ./scripts/explore-agents.sh
 ```
-get details of your agent:
+Get details of your agent:
 ```
 ./scripts/explore-agents.sh --agent-id <your_agent_id>
 ```
 
 
-## Related Links
 
-On-chain registry contract: [8004-compliant registry](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460)
+## More about Sparsity Solution
 
-Agent explorer / discovery URL: [Agent explorer](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460)
+Sparsity's layered approach enables developers to quickly build, certify, and deploy secure TEE applications with minimal friction, leveraging both AWS Nitro Enclaves and advanced compliance and hosting solutions.
 
+In this tutorial, we have covered the first two layers: building TEE agents with enclave-toolkit and validating them with trustless-agent-framework.
+
+If you want to know more about Sparsity's offerings, see [Sparsity Offerings](Sparsity_Offerings.md) for details.
 
 ## Support
 
