@@ -61,11 +61,16 @@ If you have submitted the lab environment application form, you will receive the
 
 ### 3. Edit Agent Code
 
-You are encouraged to modify `/src/agent.json` to customize your agent's metadata. 
+You are encouraged to modify `src/agent.json` to customize your agent's metadata. 
 
 You can also modify other files in the `src/` directory to implement your own agent logic.
 
-NOTE: There is one "/chat" endpoint in the agent code that your agent can integrate with OpenAI. If you want to test this endpoint, make sure you have set up the OpenAI API key in your `/src/.env` file.
+NOTE: There is one "/chat" endpoint in the agent code that your agent can integrate with OpenAI. If you want to test this endpoint, make sure you have set up the OpenAI API key in your `src/.env` file.
+
+```
+cp src/.env.example src/.env
+nano src/.env
+```
 
 ### 4. Build & Deploy Your Agent
 
@@ -131,7 +136,7 @@ After deployment, you can request a ZK proof of your agent by running:
 ./scripts/request-proof.sh
 ```
 
-It will take around 60 seconds to generate the ZK proof. This will generate a proof file in the current directory. If successful, you should see output like below:
+It will take around 60 seconds to generate the ZK proof. The proof file will be saved in the ./scripts/ directory. If successful, you should see output like below:
 
 ```
 ...
@@ -177,16 +182,19 @@ You should see output like below:
 [NEXT] Agent ID (uint256): 25
 ```
 
-Now your agent is registered and validated on-chain! You should be able to see your agent in the [Agent explorer](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460).
+Now your agent is registered and validated on-chain! You should be able to see your agent in the [Online Registry](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460).
 
 
 ### 7. Explore Agents
 
 List all agents:
+
 ```
 ./scripts/explore-agents.sh
 ```
-Get details of your agent:
+
+Or get details of your agent:
+
 ```
 ./scripts/explore-agents.sh --agent-id <your_agent_id>
 ```
