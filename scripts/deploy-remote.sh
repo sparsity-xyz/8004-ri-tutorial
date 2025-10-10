@@ -54,6 +54,7 @@ success "Terminate command issued"
 
 # Copy src/ to remote
 step "Copying source files"
+ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "rm -rf ~/app || true"
 ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "mkdir -p ~/app"
 if scp -i "$EC2_PEM_KEY" -r src/. "$EC2_USER@$EC2_HOST:~/app/"; then
     success "Sources copied"
@@ -64,7 +65,7 @@ fi
 # Build Docker image
 step "Building Docker image"
 ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && sudo docker image rm $DOCKER_IMAGE_NAME || true"
-ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && sudo docker build --no-cache --build-arg VSOCK=true --build-arg HTTP=true --build-arg DNS=true -t $DOCKER_IMAGE_NAME ."
+ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && sudo docker build --build-arg VSOCK=true --build-arg HTTP=true --build-arg DNS=true -t $DOCKER_IMAGE_NAME ."
 success "Docker image built: $DOCKER_IMAGE_NAME"
 
 # Build enclave image
