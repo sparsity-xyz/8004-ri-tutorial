@@ -1,8 +1,9 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
-import os, time
+import os, time, json
 import httpx
+from pathlib import Path
 
 from nitro_toolkit.enclave import BaseNitroEnclaveApp
 from nitro_toolkit.util.log import logger
@@ -12,30 +13,19 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 class App(BaseNitroEnclaveApp):
 
-    def build_agent_card(self):
-        return {
-            "name": os.getenv("AGENT_NAME", "SampleEnclaveAgent"),
-            "description": os.getenv("AGENT_DESCRIPTION", "Example Nitro-enclave-based trustless agent"),
-            "version": os.getenv("AGENT_VERSION", "0.1.0"),
-            "schema_version": 1,
-            "tee_arch": os.getenv("TEE_ARCH", "nitro"),
-            "zk_type": os.getenv("ZK_TYPE", "Succinct"),
-            "registry": os.getenv("REGISTRY", ""),
-            "network": os.getenv("NETWORK", ""),
-            "endpoints": ["/agent_card", "/.well-known/agent.json", "/add_two", "/hello_world", "/chat"],
-            "attestation_endpoint": os.getenv("ATTESTATION_PATH", "/attestation"),
-            "timestamp": int(time.time()),
-        }
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        # Optional external agent card file (defaults to /app/agent.json inside container)
+        self.agent_card_path: Path = Path(os.getenv("AGENT_CARD_PATH", "/app/agent.json"))
+        self._agent_card_cache = None
+        self._agent_card_mtime = None
         self.add_endpoints()
+
 
 
     def add_endpoints(self):
         # Agent card endpoints (human + well-known)
-        self.app.add_api_route("/agent_card", self.agent_card, methods=["GET"])
+        self.app.add_api_route("/agent.json", self.agent_card, methods=["GET"])
         self.app.add_api_route("/.well-known/agent.json", self.agent_well_known, methods=["GET"])
 
         # toy examples
@@ -48,11 +38,11 @@ class App(BaseNitroEnclaveApp):
     
     async def agent_card(self, request: Request):
         # Return JSON metadata card
-        return JSONResponse(self.build_agent_card())
+        return JSONResponse(self.load_agent_card())
 
     async def agent_well_known(self, request: Request):
         # Add short cache headers for discovery crawlers
-        card = self.build_agent_card()
+        card = self.load_agent_card()
         resp = JSONResponse(card)
         resp.headers["Cache-Control"] = "public, max-age=300"
         return resp
@@ -67,6 +57,30 @@ class App(BaseNitroEnclaveApp):
         b = body.get("b")
         return self.response(str(int(a) + int(b)))
 
+    def load_agent_card(self, force: bool = False):
+        """Load agent card from JSON file if present; otherwise return empty.
+        Caches content and auto-reloads on file mtime change.
+        """
+        try:
+            if self.agent_card_path.exists():
+                mtime = self.agent_card_path.stat().st_mtime
+                if force or self._agent_card_cache is None or mtime != self._agent_card_mtime:
+                    with self.agent_card_path.open("r", encoding="utf-8") as f:
+                        data = json.load(f)
+                    if isinstance(data, dict):
+                        data.setdefault("timestamp", int(time.time()))
+                        self._agent_card_cache = data
+                        self._agent_card_mtime = mtime
+                    else:
+                        logger.warn("agent.json is not a JSON object; returning empty card")
+                        self._agent_card_cache = {}
+                return self._agent_card_cache
+            else:
+                # No agent.json present; return empty
+                return {}
+        except Exception as e:
+            logger.error(f"Failed to load agent card from {self.agent_card_path}: {e}")
+            return {}
     
     # please modify this function to build your own agent leveraging LLMs 
     async def chat(self, request: Request):

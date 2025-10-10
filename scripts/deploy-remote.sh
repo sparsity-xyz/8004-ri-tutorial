@@ -96,9 +96,9 @@ step "Running enclave in debug mode"
 ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && HOME=/home/$EC2_USER sudo nitro-cli run-enclave --eif-path $EIF_FILE_NAME --cpu-count $ENCLAVE_CPU_COUNT --memory $ENCLAVE_MEMORY --debug-mode --enclave-cid 16"
 success "Enclave launch command executed"
 
-# Generate curl command for /agent_card endpoint
-step "Generating curl command for enclave API (/agent_card)"
-CURL_CMD="curl -s http://$EC2_HOST/agent_card | jq"
+# Generate curl command for /agent.json endpoint
+step "Generating curl command for enclave API (/agent.json)"
+CURL_CMD="curl -s http://$EC2_HOST/agent.json | jq"
 info "You can invoke the enclave endpoint with:"
 echo "  $CURL_CMD"
 
