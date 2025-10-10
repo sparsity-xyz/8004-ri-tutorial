@@ -63,11 +63,13 @@ fi
 
 # Build Docker image
 step "Building Docker image"
+ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && sudo docker image rm $DOCKER_IMAGE_NAME || true"
 ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && sudo docker build --no-cache --build-arg VSOCK=true --build-arg HTTP=true --build-arg DNS=true -t $DOCKER_IMAGE_NAME ."
 success "Docker image built: $DOCKER_IMAGE_NAME"
 
 # Build enclave image
 step "Building enclave image (EIF)"
+ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && sudo rm $EIF_FILE_NAME || true"
 ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && sudo nitro-cli build-enclave --docker-uri $DOCKER_IMAGE_NAME --output-file $EIF_FILE_NAME"
 success "EIF built: $EIF_FILE_NAME"
 
@@ -80,7 +82,7 @@ success "nitro-toolkit installed"
 
 # Start host proxy
 step "Starting host proxy (background)"
-ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "sudo pkill python3 || true"
+ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "sudo killall python3 || true"
 ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "sudo ~/venv/bin/python3 -m nitro_toolkit.host.main --vsock --cid 16 --server-port 80 > ~/host.log 2>&1 &"
 success "Host proxy started (log: ~/host.log)"
 
