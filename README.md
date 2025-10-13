@@ -182,7 +182,9 @@ You should see output like below:
 [NEXT] Agent ID (uint256): 25
 ```
 
-Now your agent is registered and validated on-chain! You should be able to see your agent in the [Online Registry](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460).
+Now your agent is registered and validated on-chain! You should be able to see your agent in the [Registry Contract](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460).
+
+Or through our [TEE Agent Explorer](http://18.144.124.66:8080/).
 
 
 ### 7. Explore Agents
