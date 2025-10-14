@@ -169,20 +169,20 @@ You should see output like below:
 [INFO] Agent ID (hex): 0x0000000000000000000000000000000000000000000000000000000000000019
 ==> Summary
 [INFO] Elapsed: 1s
-[INFO] Registry: 0x3dfA3C604aE238E03DfE63122Edd43A4aD916460
+[INFO] Registry: 0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076
 [INFO] Agent URL: 3.101.88.86
 [INFO] Proof: proof_c929d31acdd3cf31_20251010041858969.json
 [INFO] Next: Update agent metadata / publish discovery record if required
 ==> Explorer references
-[NEXT] Contract:    https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460
-[NEXT] Transactions:https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460#transactions
-[NEXT] Events:      https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460#events
-[NEXT] Read:        https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460#readContract
+[NEXT] Contract:    https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076
+[NEXT] Transactions:https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076#transactions
+[NEXT] Events:      https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076#events
+[NEXT] Read:        https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076#readContract
 [NEXT] Search logs for Agent ID topic: 0000000000000000000000000000000000000000000000000000000000000019
 [NEXT] Agent ID (uint256): 25
 ```
 
-Now your agent is registered and validated on-chain! You should be able to see your agent in the [Registry Contract](https://sepolia.basescan.org/address/0x3dfA3C604aE238E03DfE63122Edd43A4aD916460).
+Now your agent is registered and validated on-chain! You should be able to see your agent in the [Registry Contract](https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076).
 
 Or through our [TEE Agent Explorer](http://18.144.124.66:8080/).
 
