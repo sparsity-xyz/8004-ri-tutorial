@@ -65,7 +65,44 @@ fi
 # Build Docker image
 step "Building Docker image"
 ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && sudo docker image rm $DOCKER_IMAGE_NAME || true"
-ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && sudo docker build --build-arg VSOCK=true --build-arg HTTP=true --build-arg DNS=true -t $DOCKER_IMAGE_NAME ."
+# For persistent key
+if [ "$PERSISTENT_KEY" = "true" ]; then
+    echo "Persistent key is enabled"
+    if [ -z "$APP_ID" ]; then
+        err "APP_ID is required if you want PERSISTENT_KEY"
+        exit 1
+    fi
+    if [ -z "$AWS_DEFAULT_REGION" ]; then
+        err "AWS_DEFAULT_REGION is required if you want PERSISTENT_KEY"
+        exit 1
+    fi
+
+    ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" \
+    "TOKEN=\$(curl -s -X PUT 'http://169.254.169.254/latest/api/token' -H 'X-aws-ec2-metadata-token-ttl-seconds: 21600'); \
+    ROLE_NAME=\$(curl -s -H 'X-aws-ec2-metadata-token: '\$TOKEN http://169.254.169.254/latest/meta-data/iam/security-credentials/); \
+    CREDS=\$(curl -s -H 'X-aws-ec2-metadata-token: '\$TOKEN http://169.254.169.254/latest/meta-data/iam/security-credentials/\$ROLE_NAME); \
+    export AWS_ACCESS_KEY_ID=\$(echo \$CREDS | jq -r '.AccessKeyId'); \
+    export AWS_SECRET_ACCESS_KEY=\$(echo \$CREDS | jq -r '.SecretAccessKey'); \
+    export AWS_SESSION_TOKEN=\$(echo \$CREDS | jq -r '.Token'); \
+    cd ~/app && sudo docker build \
+    --build-arg VSOCK=true \
+    --build-arg HTTP=true \
+    --build-arg DNS=true \
+    --build-arg PERSISTENT_KEY=true \
+    --build-arg APP_ID=$APP_ID \
+    --build-arg KMS_KEY_ID=$KMS_KEY_ID \
+    --build-arg BUCKET_NAME=$BUCKET_NAME \
+    --build-arg AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION \
+    --build-arg AWS_ACCESS_KEY_ID=\$AWS_ACCESS_KEY_ID \
+    --build-arg AWS_SECRET_ACCESS_KEY=\$AWS_SECRET_ACCESS_KEY \
+    --build-arg AWS_SESSION_TOKEN=\$AWS_SESSION_TOKEN \
+    -t $DOCKER_IMAGE_NAME ."
+
+else
+    echo "Persistent key is disabled"
+    ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && sudo docker build --build-arg VSOCK=true --build-arg HTTP=true --build-arg DNS=true -t $DOCKER_IMAGE_NAME ."
+fi
+
 success "Docker image built: $DOCKER_IMAGE_NAME"
 
 # Build enclave image
