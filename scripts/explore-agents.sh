@@ -117,20 +117,21 @@ if [ -n "$TARGET_AGENT_ID" ]; then
     step "Fetching details for agent ID: $TARGET_AGENT_ID"
     
     # Call agents mapping
-    # Returns: struct Agent { uint256 agentId, bytes32 teeArch, bytes32 codeMeasurement, bytes pubkey, string url }
-    AGENT_DATA=$(cast call "$REGISTRY" "agents(uint256)(uint256,bytes32,bytes32,bytes,string)" "$TARGET_AGENT_ID" --rpc-url "$RPC_URL" 2>/dev/null || echo "")
+    # Returns: struct Agent { uint256 agentId, bytes32 teeArch, bytes32 codeMeasurement, bytes pubkey, address agentAddress, string url }
+    AGENT_DATA=$(cast call "$REGISTRY" "agents(uint256)(uint256,bytes32,bytes32,bytes,address,string)" "$TARGET_AGENT_ID" --rpc-url "$RPC_URL" 2>/dev/null || echo "")
     
     if [ -z "$AGENT_DATA" ]; then
         err "Agent ID $TARGET_AGENT_ID not found or error reading from contract"
         exit 1
     fi
     
-    # Parse the tuple response (5 fields)
+    # Parse the tuple response (6 fields)
     RETURNED_AGENT_ID=$(echo "$AGENT_DATA" | sed -n '1p')
     TEE_ARCH_HEX=$(echo "$AGENT_DATA" | sed -n '2p')
     CODE_MEASUREMENT_HEX=$(echo "$AGENT_DATA" | sed -n '3p')
     PUBKEY_HEX=$(echo "$AGENT_DATA" | sed -n '4p')
-    URL=$(echo "$AGENT_DATA" | sed -n '5p')
+    AGENT_ADDRESS=$(echo "$AGENT_DATA" | sed -n '5p')
+    URL=$(echo "$AGENT_DATA" | sed -n '6p')
     
     # Convert TEE arch from bytes32 to string using cast
     TEE_ARCH=$(cast --to-ascii "$TEE_ARCH_HEX" 2>/dev/null | tr -d '\0' || echo "$TEE_ARCH_HEX")
@@ -145,7 +146,8 @@ if [ -n "$TARGET_AGENT_ID" ]; then
   "url": $URL,
   "teeArch": "$TEE_ARCH",
   "codeMeasurement": "$CODE_MEASUREMENT_HEX",
-  "pubkey": "$PUBKEY_HEX"
+  "pubkey": "$PUBKEY_HEX",
+  "agentAddress": "$AGENT_ADDRESS"
 }
 JSON
     else
@@ -158,6 +160,7 @@ JSON
         printf "%b%-20s%b %s\n" "${BOLD}" "URL:" "${RESET}" "$URL"
         printf "%b%-20s%b %s\n" "${BOLD}" "TEE Architecture:" "${RESET}" "$TEE_ARCH"
         printf "%b%-20s%b %s\n" "${BOLD}" "Code Measurement:" "${RESET}" "$CODE_MEASUREMENT_HEX"
+        printf "%b%-20s%b %s\n" "${BOLD}" "Agent Address:" "${RESET}" "$AGENT_ADDRESS"
         printf "%b%-20s%b\n%s\n" "${BOLD}" "Public Key:" "${RESET}" "$PUBKEY_HEX"
         echo
     fi
@@ -213,25 +216,25 @@ if [ "$FORMAT" = "json" ]; then
 fi
 
 if [ "$FORMAT" = "csv" ]; then
-    echo "AgentID,URL,TEEArch,CodeMeasurement,Pubkey"
+    echo "AgentID,URL,TEEArch,CodeMeasurement,AgentAddress,Pubkey"
 fi
 
 if [ "$FORMAT" = "table" ]; then
     echo
-    highlight "═══════════════════════════════════════════════════════════════════════════════════════════════════"
-    highlight "                                     Registered Agents"
-    highlight "═══════════════════════════════════════════════════════════════════════════════════════════════════"
+    highlight "═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════"
+    highlight "                                                 Registered Agents"
+    highlight "═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════"
     echo
-    printf "%b%-10s %-45s %-20s %-30s%b\n" "${BOLD}" "ID" "URL" "TEE Arch" "Code Measurement" "${RESET}"
-    echo "───────────────────────────────────────────────────────────────────────────────────────────────────────"
+    printf "%b%-10s %-20s %-15s %-30s %-42s%b\n" "${BOLD}" "ID" "URL" "TEE Arch" "Code Measurement" "Agent Address" "${RESET}"
+    echo "───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
 fi
 
 # Iterate through agent IDs from the agentList
 FIRST=true
 for AGENT_ID_ITER in $AGENT_IDS; do
     # Get agent data
-    # Returns: struct Agent { uint256 agentId, bytes32 teeArch, bytes32 codeMeasurement, bytes pubkey, string url }
-    AGENT_DATA=$(cast call "$REGISTRY" "agents(uint256)(uint256,bytes32,bytes32,bytes,string)" "$AGENT_ID_ITER" --rpc-url "$RPC_URL" 2>/dev/null || echo "")
+    # Returns: struct Agent { uint256 agentId, bytes32 teeArch, bytes32 codeMeasurement, bytes pubkey, address agentAddress, string url }
+    AGENT_DATA=$(cast call "$REGISTRY" "agents(uint256)(uint256,bytes32,bytes32,bytes,address,string)" "$AGENT_ID_ITER" --rpc-url "$RPC_URL" 2>/dev/null || echo "")
     
     if [ -z "$AGENT_DATA" ]; then
         if [ "$FORMAT" = "table" ]; then
@@ -240,19 +243,20 @@ for AGENT_ID_ITER in $AGENT_IDS; do
         continue
     fi
     
-    # Parse response (5 fields)
+    # Parse response (6 fields)
     RETURNED_AGENT_ID=$(echo "$AGENT_DATA" | sed -n '1p')
     TEE_ARCH_HEX=$(echo "$AGENT_DATA" | sed -n '2p')
     CODE_MEASUREMENT_HEX=$(echo "$AGENT_DATA" | sed -n '3p')
     PUBKEY_HEX=$(echo "$AGENT_DATA" | sed -n '4p')
-    URL=$(echo "$AGENT_DATA" | sed -n '5p')
+    AGENT_ADDRESS=$(echo "$AGENT_DATA" | sed -n '5p')
+    URL=$(echo "$AGENT_DATA" | sed -n '6p')
     
     # Convert TEE arch from bytes32 to string using cast
     TEE_ARCH=$(cast --to-ascii "$TEE_ARCH_HEX" 2>/dev/null | tr -d '\0' || echo "$TEE_ARCH_HEX")
     
     # Truncate URL for display
-    if [ ${#URL} -gt 43 ]; then
-        URL_DISPLAY="${URL:0:40}..."
+    if [ ${#URL} -gt 18 ]; then
+        URL_DISPLAY="${URL:0:15}..."
     else
         URL_DISPLAY="$URL"
     fi
@@ -277,15 +281,16 @@ for AGENT_ID_ITER in $AGENT_IDS; do
     "url": $URL,
     "teeArch": "$TEE_ARCH",
     "codeMeasurement": "$CODE_MEASUREMENT_HEX",
+    "agentAddress": "$AGENT_ADDRESS",
     "pubkey": "$PUBKEY_HEX"
   }
 JSON
             ;;
         csv)
-            echo "$RETURNED_AGENT_ID,$URL,\"$TEE_ARCH\",\"$CODE_MEASUREMENT_HEX\",\"$PUBKEY_HEX\""
+            echo "$RETURNED_AGENT_ID,$URL,\"$TEE_ARCH\",\"$CODE_MEASUREMENT_HEX\",\"$AGENT_ADDRESS\",\"$PUBKEY_HEX\""
             ;;
         table)
-            printf "%-10s %-45s %-20s %-30s\n" "$RETURNED_AGENT_ID" "$URL_DISPLAY" "$TEE_ARCH" "$CODE_MEASUREMENT_DISPLAY"
+            printf "%-10s %-20s %-15s %-30s %-42s\n" "$RETURNED_AGENT_ID" "$URL_DISPLAY" "$TEE_ARCH" "$CODE_MEASUREMENT_DISPLAY" "$AGENT_ADDRESS"
             ;;
     esac
 done
@@ -295,7 +300,7 @@ if [ "$FORMAT" = "json" ]; then
 fi
 
 if [ "$FORMAT" = "table" ]; then
-    echo "───────────────────────────────────────────────────────────────────────────────────────────────────────"
+    echo "───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
     echo
     success "Listed $AGENT_COUNT agent(s)"
     echo

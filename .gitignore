@@ -3,3 +3,5 @@
 proof*
 attestation.bin
 .idea
+
+**__pycache__**
