@@ -123,16 +123,16 @@ Started enclave with enclave-cid: 16, memory: 4096 MiB, cpu-ids: [1, 3]
 Then you can play with your agent!
 
 ```
-export EC2_HOST=[your-ec2-public-ip]
+export AGENT_URL=[your-ec2-public-ip]
 
-curl -s http://$EC2_HOST/agent.json | jq
+curl -s http://$AGENT_URL/agent.json | jq
 
-curl -X POST http://$EC2_HOST/add_two \
+curl -X POST http://$AGENT_URL/add_two \
     -H "Content-Type: application/json" \
     -d '{"a": 2, "b": 2}'
 
 # requires OpenAI API key set in /src/.env before build and deploy
-curl -X POST http://$EC2_HOST/chat \
+curl -X POST http://$AGENT_URL/chat \
     -H "Content-Type: application/json" \
     -d '{"prompt": "What is 2+2?"}'
 
