@@ -1,9 +1,6 @@
 # Setup Nitro Enclave Runtime
 
-Follow the official AWS documentation to set up the Nitro Enclave runtime:
-
-  https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave-cli-install.html
-  
+Here are the steps to set up an AWS Nitro Enclaves runtime environment on an EC2 instance. You can always refer to the [official AWS documentation](https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave-cli-install.html) for more details.
 
 1. Create an EC2 instance with Nitro Enclave enabled. See [AWS documentation](https://docs.aws.amazon.com/enclaves/latest/user/create-enclave.html) for steps and requirement.
 
@@ -95,32 +92,8 @@ HugePages_Free:     2048
 Hugepagesize:       2048 kB
 ```
 
-3. Persist the setting across reboots by adding it to `/etc/sysctl.conf` (or better: a file in `/etc/sysctl.d/`):
 
-```bash
-echo "vm.nr_hugepages=2048" | sudo tee /etc/sysctl.d/99-nitro-hugepages.conf
-sudo sysctl --system
-```
-
-4. Reboot (if required) and verify the value again:
-
-```bash
-sudo cat /proc/sys/vm/nr_hugepages
-sudo grep Huge /proc/meminfo
-```
-
-To deactivate HugePages:
-
-```bash
-# Set nr_hugepages back to 0
-sudo sysctl -w vm.nr_hugepages=0
-# Remove your sysctl.d file if you added one
-sudo rm -f /etc/sysctl.d/99-nitro-hugepages.conf
-sudo sysctl --system
-# Reboot if necessary
-```
-
-Troubleshooting allocator startup errors (E26 / E27 / E39)
+## Troubleshooting allocator startup errors (E26 / E27 / E39)
 
 - E26 (insufficient memory requested): the requested `memory` is less than the EIF minimum memory. Use `nitro-cli describe-eif --eif-path <file.eif>` to inspect EIF metadata and discover the minimum required memory.
 - E27 (insufficient memory available): the allocator attempted to reserve the requested hugepages but the kernel could not satisfy the request. Ensure the host has enough free RAM and that `vm.nr_hugepages` is large enough.
