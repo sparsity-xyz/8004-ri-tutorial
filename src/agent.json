@@ -1,11 +1,11 @@
 {
   "name": "SampleEnclaveAgent",
   "description": "Example Nitro-enclave-based trustless agent",
+  "code_repository": "https://github.com/[your-username]/sparsity-trustless-agents-framework",
   "version": "0.1.0",
   "schema_version": 1,
   "tee_arch": "nitro",
   "zk_type": "Succinct",
-  "registry": "0x3dfA3C604aE238E03DfE63122Edd43A4aD916460",
   "network": "base-sepolia",
   "endpoints": [
     "/agent.json",
