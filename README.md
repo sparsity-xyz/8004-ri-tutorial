@@ -10,11 +10,17 @@
 
 <img width="944" height="417" alt="Screenshot 2025-10-09 at 1 28 55 AM" src="https://github.com/user-attachments/assets/9058a6aa-ed9a-408f-8802-672e40ed43cf" />
 
-In the 8004 TEE registry, the TEE Registry smart contract stores 
+Sparsity Trustless Agents Framework enables developers to build and deploy TEE agents that can be registered and validated on-chain. 
+
+On-Chain TEE registry contract serves as the central point for registering and validating TEE agents. It stores information about registered agents, including their metadata, validation status, and associated ZK proofs.
+
+Currently, the smart contract is deployed on Base Sepolia. You can also use our [TEE Agent Explorer](http://18.144.124.66:8080/) to explore registered agents.
+
+Or you can explore the contract [here](https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076) on-chain directly. See more details in [TEE_Registry_Smart_Contract.md](docs/TEE_Registry_Smart_Contract.md).
 
 ## Quick start
 
-The simplest way to get started is to build your agent from our reference implementation.
+The simplest way to get started is to build your agent from our reference implementation. You can follow the steps below to build, deploy, validate, and register your own TEE agent.
 
   - [0. Pre-requisites: AWS Nitro Enclaves Environment](#0-pre-requisites-aws-nitro-enclaves-environment)
   - [1. Fork & Clone](#1-fork--clone)
@@ -27,17 +33,20 @@ The simplest way to get started is to build your agent from our reference implem
 
 ### 0. Pre-requisites: AWS Nitro Enclaves Environment
 
-Before using Sparsity's offerings, ensure you have an AWS Nitro Enclaves environment set up. This includes having an AWS account, configuring Nitro Enclaves on your EC2 instances, and installing necessary packages.
-
-see [AWS_Nitro_Enclave_Runtime.md](AWS_Nitro_Enclave_Runtime.md) for details.
+Before using Sparsity's offerings, ensure you have an AWS Nitro Enclaves environment set up. The easiest way is to apply for our free lab environment.
 
 **Sparsity Lab Environment**
 
-For participants in BuildETH 2025, you can apply for a lab environment by submitting this form:
+For participants in "BuildETH 2025", you can apply for a lab environment by submitting this form:
 
 - Lab environment application: https://tinyurl.com/sparsity-8004-lab
 
 You will receive an email with the necessary details to start your tutorial shortly.
+
+**Build your own aws nitro enclave environment**
+
+You can also setup your own AWS Nitro Enclaves environment. Please see [AWS_Nitro_Enclave_Runtime.md](docs/AWS_Nitro_Enclave_Runtime.md) for details.
+
 
 ### 1. Fork & Clone
 
@@ -114,16 +123,16 @@ Started enclave with enclave-cid: 16, memory: 4096 MiB, cpu-ids: [1, 3]
 Then you can play with your agent!
 
 ```
-export EC2_HOST=[your-ec2-public-ip]
+export AGENT_URL=[your-ec2-public-ip]
 
-curl -s http://$EC2_HOST/agent.json | jq
+curl -s http://$AGENT_URL/agent.json | jq
 
-curl -X POST http://$EC2_HOST/add_two \
+curl -X POST http://$AGENT_URL/add_two \
     -H "Content-Type: application/json" \
     -d '{"a": 2, "b": 2}'
 
 # requires OpenAI API key set in /src/.env before build and deploy
-curl -X POST http://$EC2_HOST/chat \
+curl -X POST http://$AGENT_URL/chat \
     -H "Content-Type: application/json" \
     -d '{"prompt": "What is 2+2?"}'
 
@@ -156,7 +165,7 @@ It will take around 60 seconds to generate the ZK proof. The proof file will be 
 We use the generated proof file to register and validate your agent on-chain. Run:
 
 ```
-./scripts/validate-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json
+./scripts/validate-agent.sh --proof-path proof_generated_from_previous_step.json
 ```
 
 NOTE: you can just copy the command from the output of the previous step.
@@ -182,12 +191,14 @@ You should see output like below:
 [NEXT] Agent ID (uint256): 25
 ```
 
-Now your agent is registered and validated on-chain! You should be able to see your agent in the [Registry Contract](https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076).
-
-Or through our [TEE Agent Explorer](http://18.144.124.66:8080/).
-
+Now your agent is registered and validated on-chain! 
 
 ### 7. Explore Agents
+
+We provide multiple ways to explore registered agents.
+1. Using our [TEE Agent Explorer](http://18.144.124.66:8080/)
+2. Explore the smart contract directly on Base Sepolia, see [Base Sepolia Explorer](https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076).
+3. Using the script to explore agents from command line.
 
 List all agents:
 
@@ -201,6 +212,15 @@ Or get details of your agent:
 ./scripts/explore-agents.sh --agent-id <your_agent_id>
 ```
 
+### 8. Submit your agent to Sparsity for listing
+
+If you want your agent to be highlighted on Sparsity's official explorer, please submit the following details to us via email (support@sparsity.xyz):
+
+1. Agent Name
+2. Agent Description
+3. Agent ID
+4. Link to the Agent's Code Repository
+5. Any additional information you think is relevant
 
 
 ## More about Sparsity Solution
