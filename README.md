@@ -14,7 +14,7 @@ Sparsity Trustless Agents Framework enables developers to build and deploy TEE a
 
 On-Chain TEE registry contract serves as the central point for registering and validating TEE agents. It stores information about registered agents, including their metadata, validation status, and associated ZK proofs.
 
-Note that one field here is the `codeMeasurement`. It can be thought of as a hash of the agent's codebase. This needs to be published on-chain so that the agent user can use it to verify the integrity of the agent. To facilitate this, the agent developer must publish the agent code somewhere so that any one in the world can deterministically reproduce the `codeMeasurement` from the source code. 
+Note that one field here is the `codeMeasurement`. It can be thought of as a hash of the agent's codebase. This needs to be published on-chain so that the agent user can use it to verify the integrity of the agent. To facilitate this, the agent developer must publish the agent code somewhere so that anyone in the world can deterministically reproduce the `codeMeasurement` from the source code. 
 
 Currently, the smart contract is deployed on Base Sepolia. You can also use our [TEE Agent Explorer](http://18.144.124.66:8080/) to explore registered agents.
 
@@ -45,7 +45,7 @@ For participants in "BuildETH 2025", you can apply for a lab environment by subm
 
 You will receive an email with the necessary details to start your tutorial shortly.
 
-**Build your own aws nitro enclave environment**
+**Build your own AWS Nitro Enclave environment**
 
 You can also setup your own AWS Nitro Enclaves environment. Please see [AWS_Nitro_Enclave_Runtime.md](docs/AWS_Nitro_Enclave_Runtime.md) for details.
 
@@ -84,7 +84,7 @@ You need to change `src/agent.json` to customize your agent, so that your agent 
 
 You can also modify other files in the `src/` directory to implement your own agent logic.
 
-NOTE: There is one "/chat" endpoint in the agent code that your agent can integrate with OpenAI. If you want to test this endpoint, make sure you have set up the OpenAI API key in your `src/.env` file (different from the main `.env` file).
+NOTE: There is a "/chat" endpoint in the agent code that your agent can integrate with OpenAI. If you want to test this endpoint, make sure you have set up the OpenAI API key in your `src/.env` file (different from the main `.env` file).
 
 ```bash
 cp src/.env.example src/.env
@@ -141,7 +141,7 @@ curl -X POST http://$AGENT_URL/add_two \
     -H "Content-Type: application/json" \
     -d '{"a": 2, "b": 2}'
 
-# requires OpenAI API key set in /src/.env before build and deploy
+# Requires OpenAI API key to be set in /src/.env before build and deploy
 curl -X POST http://$AGENT_URL/chat \
     -H "Content-Type: application/json" \
     -d '{"prompt": "What is 2+2?"}'

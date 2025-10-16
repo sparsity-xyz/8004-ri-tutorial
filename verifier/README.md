@@ -12,7 +12,7 @@ pip install -r requirements.txt
 {"sig":"306402302c49d28b19149bcdd10e6f2075cf19092cbe467bcc2f04a7050a01b9782101f8ee0b165fbceabfdf6e8a6286f043fbf002307153953741d7af583d0a6b433a7432e4a1096d488a9f573862b38d74300e5cbf48bf531755d6368b7e9816f10fcb2238","data":"Hello World"}
 ```
 
-- try to verify
+- Run verification
 ```
 python3 verify.py --agent-id=17 --response-data='{"sig":"306402302c49d28b19149bcdd10e6f2075cf19092cbe467bcc2f04a7050a01b9782101f8ee0b165fbceabfdf6e8a6286f043fbf002307153953741d7af583d0a6b433a7432e4a1096d488a9f573862b38d74300e5cbf48bf531755d6368b7e9816f10fcb2238","data":"Hello World"}'
 ```

@@ -2,7 +2,7 @@
 
 Here are the steps to set up an AWS Nitro Enclaves runtime environment on an EC2 instance. You can always refer to the [official AWS documentation](https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave-cli-install.html) for more details.
 
-1. Create an EC2 instance with Nitro Enclave enabled. See [AWS documentation](https://docs.aws.amazon.com/enclaves/latest/user/create-enclave.html) for steps and requirement.
+1. Create an EC2 instance with Nitro Enclave enabled. See [AWS documentation](https://docs.aws.amazon.com/enclaves/latest/user/create-enclave.html) for steps and requirements.
 
    Amazon Linux 2 AMI is recommended.
 
@@ -95,9 +95,9 @@ Hugepagesize:       2048 kB
 
 ## Troubleshooting allocator startup errors (E26 / E27 / E39)
 
-- E26 (insufficient memory requested): the requested `memory` is less than the EIF minimum memory. Use `nitro-cli describe-eif --eif-path <file.eif>` to inspect EIF metadata and discover the minimum required memory.
-- E27 (insufficient memory available): the allocator attempted to reserve the requested hugepages but the kernel could not satisfy the request. Ensure the host has enough free RAM and that `vm.nr_hugepages` is large enough.
-- E39 (enclave process connection failure): often a consequence of previous errors; check `/var/log/nitro_enclaves` and the journal (`journalctl -u nitro-enclaves-allocator.service`) for detailed logs.
+- E26 (insufficient memory requested): The requested `memory` is less than the EIF minimum memory. Use `nitro-cli describe-eif --eif-path <file.eif>` to inspect EIF metadata and discover the minimum required memory.
+- E27 (insufficient memory available): The allocator attempted to reserve the requested hugepages but the kernel could not satisfy the request. Ensure the host has enough free RAM and that `vm.nr_hugepages` is large enough.
+- E39 (enclave process connection failure): Often a consequence of previous errors; check `/var/log/nitro_enclaves` and the journal (`journalctl -u nitro-enclaves-allocator.service`) for detailed logs.
 
 Example quick diagnostic steps:
 
