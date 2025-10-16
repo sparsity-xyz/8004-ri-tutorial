@@ -1,440 +1,448 @@
 [
-    {
-        "inputs": [],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "inputs": [],
-        "type": "error",
-        "name": "AlreadyInitialized"
-    },
-    {
-        "inputs": [],
-        "type": "error",
-        "name": "NewOwnerIsZeroAddress"
-    },
-    {
-        "inputs": [],
-        "type": "error",
-        "name": "NoHandoverRequest"
-    },
-    {
-        "inputs": [],
-        "type": "error",
-        "name": "Unauthorized"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "agentId",
-                "type": "uint256",
-                "indexed": true
-            },
-            {
-                "internalType": "bytes32",
-                "name": "teeArch",
-                "type": "bytes32",
-                "indexed": false
-            },
-            {
-                "internalType": "bytes32",
-                "name": "codeMeasurement",
-                "type": "bytes32",
-                "indexed": false
-            },
-            {
-                "internalType": "bytes",
-                "name": "pubkey",
-                "type": "bytes",
-                "indexed": false
-            },
-            {
-                "internalType": "string",
-                "name": "url",
-                "type": "string",
-                "indexed": false
-            },
-            {
-                "internalType": "address",
-                "name": "zkVerifier",
-                "type": "address",
-                "indexed": false
-            },
-            {
-                "internalType": "bytes",
-                "name": "zkProof",
-                "type": "bytes",
-                "indexed": false
-            },
-            {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address",
-                "indexed": true
-            }
-        ],
-        "type": "event",
-        "name": "AgentValidated",
-        "anonymous": false
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "pendingOwner",
-                "type": "address",
-                "indexed": true
-            }
-        ],
-        "type": "event",
-        "name": "OwnershipHandoverCanceled",
-        "anonymous": false
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "pendingOwner",
-                "type": "address",
-                "indexed": true
-            }
-        ],
-        "type": "event",
-        "name": "OwnershipHandoverRequested",
-        "anonymous": false
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "oldOwner",
-                "type": "address",
-                "indexed": true
-            },
-            {
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address",
-                "indexed": true
-            }
-        ],
-        "type": "event",
-        "name": "OwnershipTransferred",
-        "anonymous": false
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "verifier",
-                "type": "address",
-                "indexed": true
-            }
-        ],
-        "type": "event",
-        "name": "ZKVerifierSet",
-        "anonymous": false
-    },
-    {
-        "inputs": [],
-        "stateMutability": "view",
-        "type": "function",
-        "name": "agentCount",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ]
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "name": "agentList",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ]
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "name": "agentOwners",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ]
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "name": "agents",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "agentId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "teeArch",
-                "type": "bytes32"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "codeMeasurement",
-                "type": "bytes32"
-            },
-            {
-                "internalType": "bytes",
-                "name": "pubkey",
-                "type": "bytes"
-            },
-            {
-                "internalType": "string",
-                "name": "url",
-                "type": "string"
-            }
-        ]
-    },
-    {
-        "inputs": [],
-        "stateMutability": "payable",
-        "type": "function",
-        "name": "cancelOwnershipHandover"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "pendingOwner",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "payable",
-        "type": "function",
-        "name": "completeOwnershipHandover"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "agentId",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "name": "getAgent",
-        "outputs": [
-            {
-                "internalType": "struct Agent",
-                "name": "",
-                "type": "tuple",
-                "components": [
-                    {
-                        "internalType": "uint256",
-                        "name": "agentId",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "bytes32",
-                        "name": "teeArch",
-                        "type": "bytes32"
-                    },
-                    {
-                        "internalType": "bytes32",
-                        "name": "codeMeasurement",
-                        "type": "bytes32"
-                    },
-                    {
-                        "internalType": "bytes",
-                        "name": "pubkey",
-                        "type": "bytes"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "url",
-                        "type": "string"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "inputs": [],
-        "stateMutability": "view",
-        "type": "function",
-        "name": "getAgentCount",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ]
-    },
-    {
-        "inputs": [],
-        "stateMutability": "view",
-        "type": "function",
-        "name": "getAgentList",
-        "outputs": [
-            {
-                "internalType": "uint256[]",
-                "name": "",
-                "type": "uint256[]"
-            }
-        ]
-    },
-    {
-        "inputs": [],
-        "stateMutability": "view",
-        "type": "function",
-        "name": "owner",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "result",
-                "type": "address"
-            }
-        ]
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "pendingOwner",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "name": "ownershipHandoverExpiresAt",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "result",
-                "type": "uint256"
-            }
-        ]
-    },
-    {
-        "inputs": [],
-        "stateMutability": "payable",
-        "type": "function",
-        "name": "renounceOwnership"
-    },
-    {
-        "inputs": [],
-        "stateMutability": "payable",
-        "type": "function",
-        "name": "requestOwnershipHandover"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "verifier",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function",
-        "name": "setZKVerifier"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "payable",
-        "type": "function",
-        "name": "transferOwnership"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "url",
-                "type": "string"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "teeArch",
-                "type": "bytes32"
-            },
-            {
-                "internalType": "enum ZkCoProcessorType",
-                "name": "zkCoprocessor",
-                "type": "uint8"
-            },
-            {
-                "internalType": "bytes",
-                "name": "output",
-                "type": "bytes"
-            },
-            {
-                "internalType": "bytes",
-                "name": "proofBytes",
-                "type": "bytes"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function",
-        "name": "validateAgent",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ]
-    },
-    {
-        "inputs": [],
-        "stateMutability": "view",
-        "type": "function",
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "AlreadyInitialized",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NewOwnerIsZeroAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoHandoverRequest",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "Unauthorized",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum AgentAction",
+        "name": "action",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "agentId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "teeArch",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "codeMeasurement",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "teePubkey",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "agentWalletAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "agentUrl",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "zkVerifier",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ]
-    }
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "AgentModified",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "agentId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "AgentRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "pendingOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipHandoverCanceled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "pendingOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipHandoverRequested",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "oldOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "verifier",
+        "type": "address"
+      }
+    ],
+    "name": "ZKVerifierSet",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "agents",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "agentId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "teeArch",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "codeMeasurement",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "teePubkey",
+        "type": "bytes"
+      },
+      {
+        "internalType": "address",
+        "name": "agentWalletAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "agentUrl",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "cancelOwnershipHandover",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pendingOwner",
+        "type": "address"
+      }
+    ],
+    "name": "completeOwnershipHandover",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAgentCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAgentList",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nextAgentId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "result",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pendingOwner",
+        "type": "address"
+      }
+    ],
+    "name": "ownershipHandoverExpiresAt",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "result",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "agentUrl",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "teeArch",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "enum ZkCoProcessorType",
+        "name": "zkCoprocessor",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes",
+        "name": "publicValues",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "proofBytes",
+        "type": "bytes"
+      }
+    ],
+    "name": "registerAgent",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "agentId",
+        "type": "uint256"
+      }
+    ],
+    "name": "removeAgent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "requestOwnershipHandover",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "verifier",
+        "type": "address"
+      }
+    ],
+    "name": "setZKVerifier",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "agentId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "agentUrl",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "teeArch",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "enum ZkCoProcessorType",
+        "name": "zkCoprocessor",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes",
+        "name": "publicValues",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "proofBytes",
+        "type": "bytes"
+      }
+    ],
+    "name": "updateAgent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "zkVerifier",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
 ]

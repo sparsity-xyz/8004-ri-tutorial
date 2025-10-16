@@ -19,15 +19,16 @@ class TEEValidationRegistryContract:
     def get_agent(self, agent_id: int):
         agent = self.contract.functions.agents(agent_id).call()
         return {
-            "agent_id": agent[0],
-            "tee_arch": agent[1].hex(),
-            "code_measurement": agent[2].hex(),
-            "pubkey": agent[3].hex(),
-            "url": agent[4],
+            "agent_id": agent[1],
+            "tee_arch": agent[2].hex(),
+            "code_measurement": agent[3].hex(),
+            "tee_pubkey": agent[4].hex(),
+            "wallet_address": agent[5],
+            "url": agent[6],
         }
 
     def get_agent_count(self):
-        return self.contract.functions.agentCount().call()
+        return self.contract.functions.nextAgentId().call()
 
 if __name__ == '__main__':
     c = TEEValidationRegistryContract(
