@@ -96,13 +96,13 @@ nano src/.env
 If you have modified the agent code, please make sure you have tested locally with Docker first.
 
 ```bash
-./scripts/deploy-local.sh
+./scripts/build-and-deploy-local.sh
 ```
 
 After that, you can deploy your agent to the EC2 Nitro Enclave by running:
 
 ```bash
-./scripts/deploy-remote.sh
+./scripts/build-and-deploy-remote.sh
 ```
 If everything goes well, you should see output like below:
 
@@ -112,7 +112,7 @@ If everything goes well, you should see output like below:
 Start allocating memory...
 Started enclave with enclave-cid: 16, memory: 4096 MiB, cpu-ids: [1, 3]
 {
-  "EnclaveName": "test-app",
+  "EnclaveName": "demo-agent",
   "EnclaveID": "i-0f881432b6288ad0f-enc199cc4a57a29c28",
   "ProcessID": 28667,
   "EnclaveCID": 16,
@@ -164,7 +164,7 @@ python3 verify --agent-id=[your_agent_id] --url-path=/add_two --data='{"a": 1, "
 After deployment, you can request a ZK proof of your agent by running:
 
 ```bash
-./scripts/request-proof.sh
+./scripts/attest-and-prove.sh
 ```
 
 It will take around 60 seconds to generate the ZK proof. The proof file will be saved in the ./scripts/ directory. If successful, you should see output like below:
@@ -179,7 +179,7 @@ It will take around 60 seconds to generate the ZK proof. The proof file will be 
 [INFO] Directory: c929d31acdd3cf31_20251010041858969
 [INFO] Elapsed: 65s
 [INFO] Output: proof_c929d31acdd3cf31_20251010041858969.json
-[NEXT] Next: ./scripts/register-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json 
+[NEXT] Next: ./scripts/validate-and-register-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json 
 ```
 
 ### 6. Register & Validate Your Agent
@@ -187,7 +187,7 @@ It will take around 60 seconds to generate the ZK proof. The proof file will be 
 We use the generated proof file to register and validate your agent on-chain. Run:
 
 ```bash
-./scripts/register-agent.sh --proof-path [proof_generated_from_previous_step.json]
+./scripts/validate-and-register-agent.sh --proof-path [proof_generated_from_previous_step.json]
 ```
 
 NOTE: you can just copy the command from the output of the previous step.

@@ -20,8 +20,8 @@ source .env
 step "Loaded .env file"
 
 # Set default values
-DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME:-test-app}
-EIF_FILE_NAME=${EIF_FILE_NAME:-test-app.eif}
+DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME:-demo-agent}
+EIF_FILE_NAME=${EIF_FILE_NAME:-demo-agent.eif}
 ENCLAVE_MEMORY=${ENCLAVE_MEMORY:-4096}
 ENCLAVE_CPU_COUNT=${ENCLAVE_CPU_COUNT:-2}
 
