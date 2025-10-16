@@ -151,7 +151,12 @@ curl -X POST http://$AGENT_URL/chat \
 You can verify the signature in agent's response by:
 
 ```bash
-
+cd verifier
+pip install -r requirements.txt
+# get method
+python3 verify --agent-id=[your_agent_id] --url-path=/hello_world
+# post method
+python3 verify --agent-id=[your_agent_id] --url-path=/add_two --data='{"a": 1, "b": 2}'
 ```
 
 ### 5. Request ZK Proof of Your Agent
