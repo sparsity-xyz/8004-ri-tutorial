@@ -229,7 +229,7 @@ If you want to know more about Sparsity's offerings, see [Sparsity Offerings](Sp
 
 If you run into issues or have questions, here are the best ways to reach us:
 
-- Discord: join our community and ask in the support channel — https://discord.gg/HCnFr7M3
+- Discord: join our community and ask in the support channel — https://discord.gg/6vrFdpnFvm
 - Email: send detailed issues to support@sparsity.xyz (include repo, branch, steps to reproduce, and any logs)
 - X (Twitter): mention @sparsity_xyz for short questions or announcements
 - GitHub: open an issue in this repository with the bug or feature request — include reproduction steps and relevant logs
