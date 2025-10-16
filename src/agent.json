@@ -1,7 +1,7 @@
 {
-  "name": "SampleEnclaveAgent",
+  "name": "Zhengfa's Agent",
   "description": "Example Nitro-enclave-based trustless agent",
-  "code_repository": "https://github.com/[your-username]/sparsity-trustless-agents-framework",
+  "code_repository": "https://github.com/zfdang/8004-ri-tutorial",
   "version": "0.1.0",
   "schema_version": 1,
   "tee_arch": "nitro",

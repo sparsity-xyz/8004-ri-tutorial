@@ -55,13 +55,13 @@ You can also setup your own AWS Nitro Enclaves environment. Please see [AWS_Nitr
 Fork this repo to your own GitHub account, then clone it to your local machine.
 
 ```bash
-git clone https://github.com/[your-username]/sparsity-trustless-agents-framework.git --depth=1
+git clone https://github.com/[your-space]]/8004-ri-tutorial --depth=1
 ```
 
 ### 2. Edit .env for Nitro Enclave Runtime and Base Sepolia Setup
 
 ```bash
-cd sparsity-trustless-agents-framework
+cd 8004-ri-tutorial
 cp .env.example .env
 nano .env
 ```
@@ -151,12 +151,9 @@ curl -X POST http://$AGENT_URL/chat \
 You can verify the signature in agent's response by:
 
 ```bash
-cd verifier
-pip install -r requirements.txt
-# get method
-python3 verify --agent-id=[your_agent_id] --url-path=/hello_world
-# post method
-python3 verify --agent-id=[your_agent_id] --url-path=/add_two --data='{"a": 1, "b": 2}'
+pip install -r ./scripts/verifier/requirements.txt
+python3 scripts/verify/verify.py --agent-id=[your_agent_id] --url-path=/hello_world
+python3 scripts/verify/verify.py --agent-id=[your_agent_id] --url-path=/add_two --data='{"a": 1, "b": 2}'
 ```
 
 ### 5. Request ZK Proof of Your Agent
