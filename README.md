@@ -148,14 +148,7 @@ curl -X POST http://$AGENT_URL/chat \
 
 ```
 
-You can verify the signature in agent's response by:
 
-```bash
-pip install -r ./scripts/verifier/requirements.txt
-export AGENT_ID=[your_agent_id]
-python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/hello_world
-python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/add_two --data='{"a": 1, "b": 2}'
-```
 
 ### 5. Request ZK Proof of Your Agent
 
@@ -209,25 +202,20 @@ You should see output like below:
 
 Now your agent is registered and validated on-chain! 
 
+You can verify the signature in agent's response by:
+
+```bash
+pip install -r ./scripts/verifier/requirements.txt
+export AGENT_ID=[your_agent_id]
+python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/hello_world
+python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/add_two --data='{"a": 1, "b": 2}'
+```
+
 ### 7. Explore Agents
 
 We provide multiple ways to explore registered agents.
 1. Using our [TEE Agent Explorer](http://18.144.124.66:8080/)
 2. Explore the smart contract directly on Base Sepolia, see [Base Sepolia Explorer](https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637).
-3. Using cli scripts to explore agents:
-
-List all agents:
-
-```bash
-./scripts/explore-agents.sh
-```
-
-Or get details of your agent:
-
-```bash
-./scripts/explore-agents.sh --agent-id [your_agent_id]
-```
-
 
 ## 🧩 More about Sparsity Solution
 
