@@ -54,13 +54,13 @@ You can also setup your own AWS Nitro Enclaves environment. Please see [AWS_Nitr
 
 Fork this repo to your own GitHub account, then clone it to your local machine.
 
-```
+```bash
 git clone https://github.com/[your-username]/sparsity-trustless-agents-framework.git --depth=1
 ```
 
 ### 2. Edit .env for Nitro Enclave Runtime and Base Sepolia Setup
 
-```
+```bash
 cd sparsity-trustless-agents-framework
 cp .env.example .env
 nano .env
@@ -72,13 +72,21 @@ If you have submitted the lab environment application form, you will receive the
 
 ### 3. Edit Agent Code
 
-You are encouraged to modify `src/agent.json` to customize your agent's metadata. 
+You need to change `src/agent.json` to customize your agent, so that your agent can be identified on-chain.
+
+```json
+{
+  "name": "[Your Agent Name]",
+  "description": "[Your description here]",
+  "code_repository": "https://github.com/[your-username]/sparsity-trustless-agents-framework",
+}
+```
 
 You can also modify other files in the `src/` directory to implement your own agent logic.
 
 NOTE: There is one "/chat" endpoint in the agent code that your agent can integrate with OpenAI. If you want to test this endpoint, make sure you have set up the OpenAI API key in your `src/.env` file (different from the main `.env` file).
 
-```
+```bash
 cp src/.env.example src/.env
 nano src/.env
 ```
@@ -87,13 +95,13 @@ nano src/.env
 
 If you have modified the agent code, please make sure you have tested locally with Docker first.
 
-```
+```bash
 ./scripts/deploy-local.sh
 ```
 
 After that, you can deploy your agent to the EC2 Nitro Enclave by running:
 
-```
+```bash
 ./scripts/deploy-remote.sh
 ```
 If everything goes well, you should see output like below:
@@ -124,7 +132,7 @@ Started enclave with enclave-cid: 16, memory: 4096 MiB, cpu-ids: [1, 3]
 
 Then you can play with your agent!
 
-```
+```bash
 export AGENT_URL=[your-ec2-public-ip]
 
 curl -s http://$AGENT_URL/agent.json | jq
@@ -139,11 +147,18 @@ curl -X POST http://$AGENT_URL/chat \
     -d '{"prompt": "What is 2+2?"}'
 
 ```
+
+You can verify the signature in agent's response by:
+
+```bash
+
+```
+
 ### 5. Request ZK Proof of Your Agent
 
 After deployment, you can request a ZK proof of your agent by running:
 
-```
+```bash
 ./scripts/request-proof.sh
 ```
 
@@ -159,15 +174,15 @@ It will take around 60 seconds to generate the ZK proof. The proof file will be 
 [INFO] Directory: c929d31acdd3cf31_20251010041858969
 [INFO] Elapsed: 65s
 [INFO] Output: proof_c929d31acdd3cf31_20251010041858969.json
-[NEXT] Next: ./scripts/validate-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json 
+[NEXT] Next: ./scripts/register-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json 
 ```
 
 ### 6. Register & Validate Your Agent
 
 We use the generated proof file to register and validate your agent on-chain. Run:
 
-```
-./scripts/validate-agent.sh --proof-path proof_generated_from_previous_step.json
+```bash
+./scripts/register-agent.sh --proof-path [proof_generated_from_previous_step.json]
 ```
 
 NOTE: you can just copy the command from the output of the previous step.
@@ -186,10 +201,6 @@ You should see output like below:
 [INFO] Next: Update agent metadata / publish discovery record if required
 ==> Explorer references
 [NEXT] Contract:    https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076
-[NEXT] Transactions:https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076#transactions
-[NEXT] Events:      https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076#events
-[NEXT] Read:        https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076#readContract
-[NEXT] Search logs for Agent ID topic: 0000000000000000000000000000000000000000000000000000000000000019
 [NEXT] Agent ID (uint256): 25
 ```
 
@@ -200,29 +211,19 @@ Now your agent is registered and validated on-chain!
 We provide multiple ways to explore registered agents.
 1. Using our [TEE Agent Explorer](http://18.144.124.66:8080/)
 2. Explore the smart contract directly on Base Sepolia, see [Base Sepolia Explorer](https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076).
-3. Using the script to explore agents from command line.
+3. Using cli scripts to explore agents:
 
 List all agents:
 
-```
+```bash
 ./scripts/explore-agents.sh
 ```
 
 Or get details of your agent:
 
+```bash
+./scripts/explore-agents.sh --agent-id [your_agent_id]
 ```
-./scripts/explore-agents.sh --agent-id <your_agent_id>
-```
-
-### 8. Submit your agent to Sparsity for listing
-
-If you want your agent to be highlighted on Sparsity's official explorer, please submit the following details to us via email (support@sparsity.xyz):
-
-1. Agent Name
-2. Agent Description
-3. Agent ID
-4. Link to the Agent's Code Repository
-5. Any additional information you think is relevant
 
 
 ## More about Sparsity Solution
@@ -249,3 +250,15 @@ When opening an issue or contacting support, please include:
 3. Relevant log excerpts or error messages
 
 We aim to respond within 48 hours for community channels and email depending on volume.
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+**⭐ Star this repo if you find it useful! ⭐**
+
+Made with ❤️ by the Sparsity team
+</div>
