@@ -214,7 +214,7 @@ python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/add_two --
 ### 7. Explore Agents
 
 We provide multiple ways to explore registered agents.
-1. Using our [TEE Agent Explorer](http://18.144.124.66:8080/)
+1. Use our [TEE Agent Explorer](http://18.144.124.66:8080/)
 2. Explore the smart contract directly on Base Sepolia, see [Base Sepolia Explorer](https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637). See help in [TEE Agent Registry Contract](docs/TEE_Agent_Registry.md).
 
 ## 🧩 More about Sparsity Solution
