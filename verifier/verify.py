@@ -6,7 +6,7 @@ import logging
 import requests
 from dotenv import load_dotenv
 
-from contract import TEEValidationRegistryContract
+from contract import TEEAgentRegistryContract
 from nitro_toolkit.crypto.signer import Signer
 from nitro_toolkit.crypto.eth_key import EthereumKey
 
@@ -17,7 +17,7 @@ class AgentClient:
 
     def __init__(self, registry_contract, chain_rpc=""):
         self.signer = Signer()
-        self.contract = TEEValidationRegistryContract(registry_contract, chain_rpc)
+        self.contract = TEEAgentRegistryContract(registry_contract, chain_rpc)
 
     def query_agent(self, agent_id):
         agent = self.contract.get_agent(agent_id)
@@ -28,8 +28,8 @@ class AgentClient:
     def verify(self, agent_id, path, data):
         try:
             agent = self.query_agent(agent_id)
-            wallet_address = agent["wallet_address"]
-            base_url = agent["url"]
+            wallet_address = agent["agent_wallet_address"]
+            base_url = agent["agent_url"]
             url = f"http://{base_url}{path}"
             if data != "":
                 resp = requests.post(url, json=json.loads(data)).json()
