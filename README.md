@@ -39,7 +39,7 @@ Before using Sparsity's offerings, ensure you have an AWS Nitro Enclaves environ
 
 **Sparsity Lab Environment**
 
-For participants in "BuildETH 2025", you can apply for a lab environment by submitting this form:
+For participants in "Sparsity Workshop", you can apply for a lab environment by submitting this form:
 
 - Lab environment application: https://tinyurl.com/sparsity-8004-lab
 
