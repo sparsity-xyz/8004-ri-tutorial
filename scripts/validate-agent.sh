@@ -152,7 +152,7 @@ echo
 # Call validateAgent with correct parameter order from interface
 step "Sending validateAgent transaction"
 RESULT=$(cast send "$REGISTRY" \
-    "validateAgent(string,bytes32,uint8,bytes,bytes)" \
+    "registerAgent(string,bytes32,uint8,bytes,bytes)" \
     "$AGENT_URL" \
     "$TEE_ARCH_BYTES32" \
     "$ZK_TYPE_ENUM" \
