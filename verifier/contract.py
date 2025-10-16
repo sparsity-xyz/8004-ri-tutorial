@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-class TEEValidationRegistryContract:
+class TEEAgentRegistryContract:
     def __init__(self, contract_address, chain_rpc=""):
         self.w3 = Web3(Web3.HTTPProvider(chain_rpc))
 
@@ -19,19 +19,20 @@ class TEEValidationRegistryContract:
     def get_agent(self, agent_id: int):
         agent = self.contract.functions.agents(agent_id).call()
         return {
+            "owner": agent[0],
             "agent_id": agent[1],
             "tee_arch": agent[2].hex(),
             "code_measurement": agent[3].hex(),
             "tee_pubkey": agent[4].hex(),
-            "wallet_address": agent[5],
-            "url": agent[6],
+            "agent_wallet_address": agent[5],
+            "agent_url": agent[6],
         }
 
     def get_agent_count(self):
         return self.contract.functions.nextAgentId().call()
 
 if __name__ == '__main__':
-    c = TEEValidationRegistryContract(
+    c = TEEAgentRegistryContract(
         contract_address=os.getenv("REGISTRY"),
         chain_rpc=os.getenv("RPC_URL")
     )

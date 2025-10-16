@@ -149,8 +149,8 @@ fi
 success "zkVerifier present"
 echo
 
-# Call validateAgent with correct parameter order from interface
-step "Sending validateAgent transaction"
+# Call registerAgent with correct parameter order from interface
+step "Sending registerAgent transaction"
 RESULT=$(cast send "$REGISTRY" \
     "registerAgent(string,bytes32,uint8,bytes,bytes)" \
     "$AGENT_URL" \
@@ -173,11 +173,11 @@ TOTAL=$((END_TIME-START_TIME))
 
 if [ -n "$AGENT_ID" ] && [ "$AGENT_ID" != "null" ]; then
     AGENT_ID_DEC=$((AGENT_ID))
-    success "Agent validated successfully"
+    success "Agent registered successfully"
     info "Agent ID (uint256): $AGENT_ID_DEC"
     info "Agent ID (hex): $AGENT_ID"
 else
-    success "Agent validated (no AgentValidated event parsed)"
+    success "Agent registered (no AgentModified event parsed)"
     warn "Could not extract agent ID from transaction logs"
 fi
 
