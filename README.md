@@ -8,7 +8,7 @@
 
 ## Architecture Overview
 
-<img width="944" height="417" alt="Screenshot 2025-10-09 at 1 28 55 AM" src="https://github.com/user-attachments/assets/9058a6aa-ed9a-408f-8802-672e40ed43cf" />
+<img width="1273" height="525" alt="Screenshot 2025-10-16 at 2 00 21 AM" src="https://github.com/user-attachments/assets/81e1f1cb-a8a1-496d-9f35-8df096681fb0" />
 
 Sparsity Trustless Agents Framework enables developers to build and deploy TEE agents that can be registered and validated on-chain. 
 
