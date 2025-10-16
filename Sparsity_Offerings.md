@@ -70,7 +70,7 @@ This diagram shows how developers build using the Enclave Toolkit (Layer 1), mak
 
 ## Layer 3: Nova Platform
 
-**Higih-level Summary:** Similar to Vercel for websites, Nova is designed specifically for TEE applications.
+**High-level Summary:** Similar to Vercel for websites, Nova is designed specifically for TEE applications.
 
 **Purpose:** Sparsity-operated platform for hosting, deploying, and managing TEE applications—similar to Vercel, but for TEE.
 
