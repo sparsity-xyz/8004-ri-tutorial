@@ -14,6 +14,8 @@ Sparsity Trustless Agents Framework enables developers to build and deploy TEE a
 
 On-Chain TEE registry contract serves as the central point for registering and validating TEE agents. It stores information about registered agents, including their metadata, validation status, and associated ZK proofs.
 
+Note that one field here is the `codeMeasurement`. It can be thought of as a hash of the agent's codebase. This needs to be published on-chain so that the agent user can use it to verify the integrity of the agent. To facilitate this, the agent developer must publish the agent code somewhere so that any one in the world can deterministically reproduce the `codeMeasurement` from the source code. 
+
 Currently, the smart contract is deployed on Base Sepolia. You can also use our [TEE Agent Explorer](http://18.144.124.66:8080/) to explore registered agents.
 
 Or you can explore the contract [here](https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076) on-chain directly. See more details in [TEE_Registry_Smart_Contract.md](docs/TEE_Registry_Smart_Contract.md).
