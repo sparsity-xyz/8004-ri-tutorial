@@ -18,7 +18,7 @@ Note that one field here is the `codeMeasurement`. It can be thought of as a has
 
 Currently, the smart contract is deployed on Base Sepolia. You can also use our [TEE Agent Explorer](http://18.144.124.66:8080/) to explore registered agents.
 
-Or you can explore the contract [here](https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076) on-chain directly. See more details in [TEE_Registry_Smart_Contract.md](docs/TEE_Registry_Smart_Contract.md).
+Or you can explore the contract [here](https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637) on-chain directly. See more details in [TEE_Registry_Smart_Contract.md](docs/TEE_Registry_Smart_Contract.md).
 
 ## Quick start
 
@@ -55,13 +55,13 @@ You can also setup your own AWS Nitro Enclaves environment. Please see [AWS_Nitr
 Fork this repo to your own GitHub account, then clone it to your local machine.
 
 ```bash
-git clone https://github.com/[your-username]/sparsity-trustless-agents-framework.git --depth=1
+git clone https://github.com/[your-space]]/8004-ri-tutorial --depth=1
 ```
 
 ### 2. Edit .env for Nitro Enclave Runtime and Base Sepolia Setup
 
 ```bash
-cd sparsity-trustless-agents-framework
+cd 8004-ri-tutorial
 cp .env.example .env
 nano .env
 ```
@@ -151,12 +151,10 @@ curl -X POST http://$AGENT_URL/chat \
 You can verify the signature in agent's response by:
 
 ```bash
-cd verifier
-pip install -r requirements.txt
-# get method
-python3 verify --agent-id=[your_agent_id] --url-path=/hello_world
-# post method
-python3 verify --agent-id=[your_agent_id] --url-path=/add_two --data='{"a": 1, "b": 2}'
+pip install -r ./scripts/verifier/requirements.txt
+export AGENT_ID=[your_agent_id]
+python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/hello_world
+python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/add_two --data='{"a": 1, "b": 2}'
 ```
 
 ### 5. Request ZK Proof of Your Agent
@@ -200,12 +198,12 @@ You should see output like below:
 [INFO] Agent ID (hex): 0x0000000000000000000000000000000000000000000000000000000000000019
 ==> Summary
 [INFO] Elapsed: 1s
-[INFO] Registry: 0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076
+[INFO] Registry: 0xe718aec274E36781F18F42C363A3B516a4427637
 [INFO] Agent URL: 3.101.88.86
 [INFO] Proof: proof_c929d31acdd3cf31_20251010041858969.json
 [INFO] Next: Update agent metadata / publish discovery record if required
 ==> Explorer references
-[NEXT] Contract:    https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076
+[NEXT] Contract:    https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637
 [NEXT] Agent ID (uint256): 25
 ```
 
@@ -215,7 +213,7 @@ Now your agent is registered and validated on-chain!
 
 We provide multiple ways to explore registered agents.
 1. Using our [TEE Agent Explorer](http://18.144.124.66:8080/)
-2. Explore the smart contract directly on Base Sepolia, see [Base Sepolia Explorer](https://sepolia.basescan.org/address/0x10252e516E5eD6013c5bf4233f39A3dF6FA2d076).
+2. Explore the smart contract directly on Base Sepolia, see [Base Sepolia Explorer](https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637).
 3. Using cli scripts to explore agents:
 
 List all agents:
