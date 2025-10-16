@@ -165,8 +165,8 @@ RESULT=$(cast send "$REGISTRY" \
 success "Transaction submitted"
 echo "$RESULT" | jq . 2>/dev/null || echo "$RESULT"
 
-# Extract agent ID from event logs (second topic in the AgentValidated event)
-AGENT_ID=$(echo "$RESULT" | jq -r '.logs[0].topics[1]' 2>/dev/null)
+# Extract agent ID from event logs (third topic in the AgentModified event)
+AGENT_ID=$(echo "$RESULT" | jq -r '.logs[0].topics[2]' 2>/dev/null)
 
 END_TIME=$(date +%s)
 TOTAL=$((END_TIME-START_TIME))

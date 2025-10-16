@@ -9,7 +9,7 @@ echo 'OPENAI_API_KEY=sk-your-key-here' >> src/.env
 
 ## 2. Deploy to EC2
 ```bash
-./scripts/deploy-remote.sh
+./scripts/build-and-deploy-remote.sh
 ```
 
 ## 3. Test Chat Endpoint

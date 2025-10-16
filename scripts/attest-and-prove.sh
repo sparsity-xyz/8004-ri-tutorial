@@ -133,7 +133,7 @@ while true; do
             info "Directory: $DIR_NAME"
             info "Elapsed: ${TOTAL}s"
             info "Output: $OUTPUT_FILE"
-            highlight "Next: ./scripts/register-agent.sh --proof-path $OUTPUT_FILE"
+            highlight "Next: ./scripts/validate-and-register-agent.sh --proof-path $OUTPUT_FILE"
             exit 0
             ;;
         202)
