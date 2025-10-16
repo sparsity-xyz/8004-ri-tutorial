@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 from contract import TEEValidationRegistryContract
 from nitro_toolkit.crypto.signer import Signer
-from nitro_toolkit.crypto.verifier import Verifier
+from nitro_toolkit.crypto.eth_key import EthereumKey
 
 load_dotenv()
 
@@ -28,25 +28,19 @@ class AgentClient:
     def verify(self, agent_id, resp):
         try:
             agent = self.query_agent(agent_id)
-            pubkey = agent["pubkey"]
-            self._verify(pubkey, json.loads(resp))
+            wallet_address = agent["wallet_address"]
+            self._verify(wallet_address, json.loads(resp))
         except Exception as e:
             logging.error(e)
             logging.error("Verify failed, please try again")
 
     @staticmethod
-    def _verify(pubkey, json_data):
+    def _verify(wallet_address, json_data):
         # Verify signature
-        pubkey_bytes = bytes.fromhex(pubkey)
         msg_data = json_data["data"]
         sig_bytes = bytes.fromhex(json_data["sig"])
 
-        verified = Verifier.verify_signature(
-            pub_key=pubkey_bytes,
-            msg=msg_data,
-            signature=sig_bytes
-        )
-
+        verified = EthereumKey.verify(sig_bytes, msg_data, wallet_address)
         print(f"Signature verified: {verified}")
         if not verified:
             print("Warning: Signature verification failed!")
