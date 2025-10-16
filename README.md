@@ -152,8 +152,9 @@ You can verify the signature in agent's response by:
 
 ```bash
 pip install -r ./scripts/verifier/requirements.txt
-python3 scripts/verify/verify.py --agent-id=[your_agent_id] --url-path=/hello_world
-python3 scripts/verify/verify.py --agent-id=[your_agent_id] --url-path=/add_two --data='{"a": 1, "b": 2}'
+export AGENT_ID=[your_agent_id]
+python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/hello_world
+python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/add_two --data='{"a": 1, "b": 2}'
 ```
 
 ### 5. Request ZK Proof of Your Agent
