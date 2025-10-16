@@ -2,11 +2,11 @@
 
 <p align="center">🚀 Reference Implementation of TEE Registry in <a href="https://8004.org">ERC-8004</a></p>
 
-## Overview
+## 📘 Overview
 
 <a href="https://8004.org">ERC-8004</a> defines trustless agents in the Ethereum ecosystem. An important component in 8004 is the validation registry. Validation ensures the integrity of agents through economic-staking or TEE. This repo provides a tutorial on building 8004 agents using TEE on the Sparsity reference implementation. For a deep dive into the 8004 registry design, please see [this doc](https://docs.google.com/document/d/127pkxlBE0048N-MNsX66Ctz5dmRxHvaJRASAr01EVVc/edit?tab=t.0#heading=h.x6rb197jqjog).
 
-## Architecture Overview
+## 🏗️ Architecture Overview
 
 <img width="1273" height="525" alt="Screenshot 2025-10-16 at 2 00 21 AM" src="https://github.com/user-attachments/assets/81e1f1cb-a8a1-496d-9f35-8df096681fb0" />
 
@@ -20,7 +20,7 @@ Currently, the smart contract is deployed on Base Sepolia. You can also use our 
 
 Or you can explore the contract [here](https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637) on-chain directly. See more details in [TEE_Registry_Smart_Contract.md](docs/TEE_Registry_Smart_Contract.md).
 
-## Quick start
+## ⚡ Quick start
 
 The simplest way to get started is to build your agent from our reference implementation. You can follow the steps below to build, deploy, validate, and register your own TEE agent.
 
@@ -229,7 +229,7 @@ Or get details of your agent:
 ```
 
 
-## More about Sparsity Solution
+## 🧩 More about Sparsity Solution
 
 Sparsity's layered approach enables developers to quickly build, certify, and deploy secure TEE applications with minimal friction, leveraging both AWS Nitro Enclaves and advanced compliance and hosting solutions.
 
@@ -237,7 +237,7 @@ In this tutorial, we have covered the first two layers: building TEE agents with
 
 If you want to know more about Sparsity's offerings, see [Sparsity Offerings](Sparsity_Offerings.md) for details.
 
-## Support
+## 🛟 Support
 
 If you run into issues or have questions, here are the best ways to reach us:
 
