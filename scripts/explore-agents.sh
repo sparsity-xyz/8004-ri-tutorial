@@ -224,12 +224,12 @@ fi
 
 if [ "$FORMAT" = "table" ]; then
     echo
-    highlight "═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════"
-    highlight "                                                    Registered Agents"
-    highlight "═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════"
+    highlight "═════════════════════════════════════════════════════════════════════════════════════════════════"
+    highlight "                                 Registered Agents"
+    highlight "═════════════════════════════════════════════════════════════════════════════════════════════════"
     echo
-    printf "%b%-10s %-42s %-20s %-15s %-30s%b\n" "${BOLD}" "ID" "Owner" "URL" "TEE Arch" "Code Measurement" "${RESET}"
-    echo "─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
+    printf "%b%-10s %-15s %-15s %-20s %-15s %-15s%b\n" "${BOLD}" "ID" "Owner" "Wallet" "URL" "TEE Arch" "Code Hash" "${RESET}"
+    echo "─────────────────────────────────────────────────────────────────────────────────────────────────────"
 fi
 
 # Iterate through agent IDs from the agentList
@@ -258,18 +258,16 @@ for AGENT_ID_ITER in $AGENT_IDS; do
     # Convert TEE arch from bytes32 to string using cast
     TEE_ARCH=$(cast --to-ascii "$TEE_ARCH_HEX" 2>/dev/null | tr -d '\0' || echo "$TEE_ARCH_HEX")
     
+    # Truncate addresses and hashes for display (first 12 chars + ...)
+    OWNER_DISPLAY="${OWNER_ADDRESS:0:12}..."
+    AGENT_ADDRESS_DISPLAY="${AGENT_ADDRESS:0:12}..."
+    CODE_MEASUREMENT_DISPLAY="${CODE_MEASUREMENT_HEX:0:12}..."
+    
     # Truncate URL for display
     if [ ${#URL} -gt 18 ]; then
         URL_DISPLAY="${URL:0:15}..."
     else
         URL_DISPLAY="$URL"
-    fi
-    
-    # Truncate code measurement for display (show first 27 chars + ...)
-    if [ ${#CODE_MEASUREMENT_HEX} -gt 30 ]; then
-        CODE_MEASUREMENT_DISPLAY="${CODE_MEASUREMENT_HEX:0:27}..."
-    else
-        CODE_MEASUREMENT_DISPLAY="$CODE_MEASUREMENT_HEX"
     fi
     
     case "$FORMAT" in
@@ -295,7 +293,7 @@ JSON
             echo "$RETURNED_AGENT_ID,\"$OWNER_ADDRESS\",$URL,\"$TEE_ARCH\",\"$CODE_MEASUREMENT_HEX\",\"$AGENT_ADDRESS\",\"$PUBKEY_HEX\""
             ;;
         table)
-            printf "%-10s %-42s %-20s %-15s %-30s\n" "$RETURNED_AGENT_ID" "$OWNER_ADDRESS" "$URL_DISPLAY" "$TEE_ARCH" "$CODE_MEASUREMENT_DISPLAY"
+            printf "%-10s %-15s %-15s %-20s %-15s %-15s\n" "$RETURNED_AGENT_ID" "$OWNER_DISPLAY" "$AGENT_ADDRESS_DISPLAY" "$URL_DISPLAY" "$TEE_ARCH" "$CODE_MEASUREMENT_DISPLAY"
             ;;
     esac
 done
@@ -305,7 +303,7 @@ if [ "$FORMAT" = "json" ]; then
 fi
 
 if [ "$FORMAT" = "table" ]; then
-    echo "─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
+    echo "─────────────────────────────────────────────────────────────────────────────────────────────────────"
     echo
     success "Listed $AGENT_COUNT agent(s)"
     echo
