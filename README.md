@@ -174,7 +174,7 @@ It will take around 60 seconds to generate the ZK proof. The proof file will be 
 [INFO] Directory: c929d31acdd3cf31_20251010041858969
 [INFO] Elapsed: 65s
 [INFO] Output: proof_c929d31acdd3cf31_20251010041858969.json
-[NEXT] Next: ./scripts/validate-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json 
+[NEXT] Next: ./scripts/register-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json 
 ```
 
 ### 6. Register & Validate Your Agent
@@ -182,7 +182,7 @@ It will take around 60 seconds to generate the ZK proof. The proof file will be 
 We use the generated proof file to register and validate your agent on-chain. Run:
 
 ```bash
-./scripts/validate-agent.sh --proof-path [proof_generated_from_previous_step.json]
+./scripts/register-agent.sh --proof-path [proof_generated_from_previous_step.json]
 ```
 
 NOTE: you can just copy the command from the output of the previous step.
