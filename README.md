@@ -254,7 +254,7 @@ When opening an issue or contacting support, please include:
 
 We aim to respond within 48 hours for community channels and email depending on volume.
 
-## 📄 License
+## ⚖️ License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
