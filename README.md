@@ -16,7 +16,7 @@ On-Chain TEE registry contract serves as the central point for registering and v
 
 Note that one field here is the `codeMeasurement`. It can be thought of as a hash of the agent's codebase. This needs to be published on-chain so that the agent user can use it to verify the integrity of the agent. To facilitate this, the agent developer must publish the agent code somewhere so that anyone in the world can deterministically reproduce the `codeMeasurement` from the source code. 
 
-Currently, the smart contract is deployed on Base Sepolia. You can also use our [TEE Agent Explorer](http://18.144.124.66:8080/) to explore registered agents.
+Currently, the smart contract is deployed on Base Sepolia. You can use our [TEE Agent Explorer](https://explorer.agents.sparsity.ai/) to explore registered agents.
 
 Or you can explore the contract [here](https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637) on-chain directly. See more details in [TEE Agent Registry Contract](docs/TEE_Agent_Registry.md).
 
