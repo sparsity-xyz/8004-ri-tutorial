@@ -108,6 +108,16 @@ If you have submitted the lab environment application form, you will receive the
 chmod 400 ~/.ssh/your-key.pem
 ```
 
+**Note on SSH host verification:** When you first connect to your EC2 instance, SSH may prompt you to verify the host fingerprint and add it to known_hosts. If the deployment script hangs or prompts for input, you can pre-add the host to your known_hosts file:
+```bash
+ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+```
+Or connect manually once first:
+```bash
+ssh -i $EC2_PEM_KEY $EC2_USER@$EC2_HOST
+# Type 'yes' when prompted, then exit
+```
+
 ### 3. Edit Agent Code
 
 You need to change `src/agent.json` to customize your agent, so that your agent can be identified on-chain.
