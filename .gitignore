@@ -5,3 +5,5 @@ attestation.bin
 .idea
 
 **__pycache__**
+
+.claude*
