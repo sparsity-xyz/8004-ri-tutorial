@@ -146,12 +146,15 @@ echo "Email file: $EMAIL_FILE"
 
 **Step 3: Extract the base64-encoded PEM key**
 ```bash
-# The base64 content is typically at lines 122-151 in the Sparsity welcome email
-# This command works for the standard Sparsity email format
-sed -n '122,151p' "$EMAIL_FILE" | tr -d '\r\n' | base64 -d > "$EC2_PEM_KEY"
-
-# Example with actual filename:
-# sed -n '122,151p' "welcome to sparsity.eml" | tr -d '\r\n' | base64 -d > 0x1d0531Fc8a495409C928db7CF17ca7608b3467BF.pem
+# Extract the base64 content DYNAMICALLY - do NOT use hardcoded line numbers!
+# Find where base64 content starts, extract until the boundary marker
+grep -A 1000 "Content-Transfer-Encoding: base64" "$EMAIL_FILE" | \
+  grep -v "Content-Transfer-Encoding" | \
+  grep -v "X-Attachment-Id" | \
+  grep -v "Content-ID" | \
+  sed '/^--.*--$/,$d' | \
+  tr -d '\r\n ' | \
+  base64 -d > "$EC2_PEM_KEY"
 ```
 
 **Step 4: Set correct permissions**
@@ -171,21 +174,6 @@ head -1 "$EC2_PEM_KEY"  # Should show "-----BEGIN RSA PRIVATE KEY-----"
 wc -c "$EC2_PEM_KEY"
 ```
 
-**Troubleshooting PEM Extraction**:
-- If the file is created but empty (0 bytes), the line numbers may be wrong for your email format
-- To find the correct line numbers, search for the base64 content:
-  ```bash
-  grep -n "Content-Transfer-Encoding: base64" *.eml
-  # The base64 content starts a few lines after this
-  # Look for lines that are all uppercase/lowercase letters, numbers, +, /, and =
-  ```
-- If extraction still fails, you can manually extract:
-  1. Open the email file in a text editor
-  2. Find the section after "Content-Transfer-Encoding: base64"
-  3. Copy all the base64 lines (between the headers and the boundary marker)
-  4. Save to a file and decode: `base64 -d < base64_content.txt > "$EC2_PEM_KEY"`
-
-**Note**: If you have a different email format, you may need to adjust the line numbers (122,151).
 
 **IMPORTANT**:
 - Save the PEM key in the **project directory**, NOT in `~/.ssh/`
