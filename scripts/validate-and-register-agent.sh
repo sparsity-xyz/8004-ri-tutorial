@@ -166,7 +166,7 @@ success "Transaction submitted"
 echo "$RESULT" | jq . 2>/dev/null || echo "$RESULT"
 
 # Extract agent ID from event logs (third topic in the AgentModified event)
-AGENT_ID=$(echo "$RESULT" | jq -r '.logs[0].topics[2]' 2>/dev/null)
+AGENT_ID=$(echo "$RESULT" | jq -r '.logs[0].topics[3]' 2>/dev/null)
 
 END_TIME=$(date +%s)
 TOTAL=$((END_TIME-START_TIME))
