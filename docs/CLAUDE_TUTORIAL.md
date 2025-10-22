@@ -133,45 +133,32 @@ Before Claude Code can begin the tutorial, you must:
 ```bash
 # Read the email to find the PEM filename
 # It will be in a line like: filename="0x1d0531Fc8a495409C928db7CF17ca7608b3467BF.pem"
-EC2_PEM_KEY=$(grep 'filename.*\.pem' *.eml | grep -oE '0x[a-fA-F0-9]{40}\.pem')
-echo "PEM filename: $EC2_PEM_KEY"
+grep 'filename.*\.pem' *.eml | grep -oE '0x[a-fA-F0-9]{40}\.pem'
+# Example output: 0x1d0531Fc8a495409C928db7CF17ca7608b3467BF.pem
 ```
 
-**Step 2: Identify the email filename**
+**Step 2: Extract the base64-encoded PEM key**
+Replace `YOUR_PEM_FILENAME.pem` with the actual filename from Step 1:
 ```bash
-# Get the actual email filename (don't assume the name)
-EMAIL_FILE=$(ls *.eml | head -1)
-echo "Email file: $EMAIL_FILE"
-```
-
-**Step 3: Extract the base64-encoded PEM key**
-```bash
-# Extract the base64 content DYNAMICALLY - do NOT use hardcoded line numbers!
-# Find where base64 content starts, extract until the boundary marker
-grep -A 1000 "Content-Transfer-Encoding: base64" "$EMAIL_FILE" | \
+grep -A 1000 "Content-Transfer-Encoding: base64" *.eml | \
   grep -v "Content-Transfer-Encoding" | \
   grep -v "X-Attachment-Id" | \
   grep -v "Content-ID" | \
   sed '/^--.*--$/,$d' | \
   tr -d '\r\n ' | \
-  base64 -d > "$EC2_PEM_KEY"
+  base64 -d > YOUR_PEM_FILENAME.pem
 ```
 
-**Step 4: Set correct permissions**
+**Step 3: Set correct permissions**
 ```bash
-chmod 400 "$EC2_PEM_KEY"
+chmod 400 YOUR_PEM_FILENAME.pem
 ```
 
-**Step 5: Verify the extraction was successful**
+**Step 4: Verify the extraction was successful**
 ```bash
-# Check file was created and has content
-ls -la "$EC2_PEM_KEY"
-
-# Verify it starts with the correct header
-head -1 "$EC2_PEM_KEY"  # Should show "-----BEGIN RSA PRIVATE KEY-----"
-
-# Check file size (should be around 1674 bytes)
-wc -c "$EC2_PEM_KEY"
+ls -la YOUR_PEM_FILENAME.pem
+head -1 YOUR_PEM_FILENAME.pem  # Should show "-----BEGIN RSA PRIVATE KEY-----"
+wc -c YOUR_PEM_FILENAME.pem    # Should be around 1674 bytes
 ```
 
 
@@ -192,21 +179,17 @@ wc -c "$EC2_PEM_KEY"
 
 **Step 1: Extract information from email**
 ```bash
-# Extract EC2 IP address from email (this becomes EC2_HOST)
-# Look for pattern like "IP Address: 54.180.105.144"
-EC2_HOST=$(grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' *.eml | head -1)
-echo "EC2_HOST: $EC2_HOST"
+# Extract EC2 IP address from email
+grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' *.eml | head -1
+# Example output: 15.164.231.228
 
-# Extract Ethereum address (it's in the greeting and filename)
-# Look for pattern like "Hi 0x1d0531Fc8a495409C928db7CF17ca7608b3467BF"
-ETH_ADDRESS=$(grep -oE '0x[a-fA-F0-9]{40}' *.eml | head -1)
-echo "ETH_ADDRESS: $ETH_ADDRESS"
+# Extract Ethereum address (from greeting or filename)
+grep -oE '0x[a-fA-F0-9]{40}' *.eml | head -1
+# Example output: 0x1d0531Fc8a495409C928db7CF17ca7608b3467BF
 
-# EC2_PEM_KEY was already extracted in Step 1a
-echo "EC2_PEM_KEY: ./$EC2_PEM_KEY"
-
-# EC2_USER is always ec2-user for AWS
-EC2_USER='ec2-user'
+# Extract PEM filename (already done in Step 1a)
+grep 'filename.*\.pem' *.eml | grep -oE '0x[a-fA-F0-9]{40}\.pem'
+# Example output: 0x1d0531Fc8a495409C928db7CF17ca7608b3467BF.pem
 ```
 
 **Step 2: Create .env file**
@@ -216,30 +199,29 @@ cp .env.example .env
 
 **Step 3: Populate .env with extracted values**
 
-Update the `.env` file with the extracted values:
+Replace the placeholders with actual values from Step 1:
 ```bash
-# Update EC2_HOST
-sed -i "s|^export EC2_HOST=.*|export EC2_HOST='$EC2_HOST'|" .env
+# Update EC2_HOST (replace with actual IP from Step 1)
+sed -i "s|^export EC2_HOST=.*|export EC2_HOST='15.164.231.228'|" .env
 
-# Update EC2_PEM_KEY  
-sed -i "s|^export EC2_PEM_KEY=.*|export EC2_PEM_KEY='./$EC2_PEM_KEY'|" .env
+# Update EC2_PEM_KEY (replace with actual PEM filename from Step 1)
+sed -i "s|^export EC2_PEM_KEY=.*|export EC2_PEM_KEY='./0x1d0531Fc8a495409C928db7CF17ca7608b3467BF.pem'|" .env
 
 # Update EC2_USER (always ec2-user for AWS)
-sed -i "s|^export EC2_USER=.*|export EC2_USER='$EC2_USER'|" .env
+sed -i "s|^export EC2_USER=.*|export EC2_USER='ec2-user'|" .env
 
-# Update ETH_ADDRESS
-sed -i "s|^export ETH_ADDRESS=.*|export ETH_ADDRESS='$ETH_ADDRESS'|" .env
-
-# Leave PRIVATE_KEY as placeholder for user to fill in
-# The user will manually add their private key in Step 4
+# Update ETH_ADDRESS (replace with actual address from Step 1)
+sed -i "s|^export ETH_ADDRESS=.*|export ETH_ADDRESS='0x1d0531Fc8a495409C928db7CF17ca7608b3467BF'|" .env
 ```
 
 **⚠️ CRITICAL - Action for Claude Code**:
 After creating the `.env` file, you MUST:
 1. **STOP** before proceeding to Step 2
-2. **Prompt the user** to manually add their Base Sepolia PRIVATE_KEY to the `.env` file
+2. **Give the user two options**:
+   - **Option A**: Manually edit `.env` file to add PRIVATE_KEY
+   - **Option B**: Provide PRIVATE_KEY via prompt (you will write it to .env)
 3. Inform the user that the private key must be **64 hexadecimal characters without the 0x prefix**
-4. Wait for user confirmation before continuing
+4. Wait for user response before continuing
 
 **Example Private Key Format**:
 ```bash
@@ -482,16 +464,11 @@ The script output will show a `[NEXT]` line with the exact command to run:
 **⚠️ Action for Claude Code**: Rename the generated proof file to `proof.json` for easy access:
 
 ```bash
-# Find the most recently created proof file and rename it
-# This handles the timestamped filename generated by the script
-LATEST_PROOF=$(ls -t proof_*.json 2>/dev/null | head -1)
-if [ -n "$LATEST_PROOF" ]; then
-    cp "$LATEST_PROOF" proof.json
-    echo "Copied $LATEST_PROOF to proof.json"
-else
-    echo "ERROR: No proof file found!"
-    exit 1
-fi
+# Find and copy the most recently created proof file
+ls -t proof_*.json 2>/dev/null | head -1
+# Note the filename, then copy it to proof.json for easy access
+# Replace PROOF_FILENAME with the actual timestamped filename shown above
+cp PROOF_FILENAME proof.json
 
 # Verify it exists and is valid JSON
 ls -la proof.json
@@ -667,15 +644,12 @@ python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/add_two --
 # Load environment variables
 source .env
 
-# Set AGENT_ID to the value captured from Step 6
-AGENT_ID=XX  # Replace with actual Agent ID from Step 6
-
 # Display all key values
 echo "=== Tutorial Summary ==="
-echo "Agent Name: $(cat src/agent.json | jq -r '.name')"
-echo "Agent ID: $AGENT_ID"
-echo "Agent URL: http://$EC2_HOST"
-echo "ETH Address: $ETH_ADDRESS"
+cat src/agent.json | jq -r '.name'
+echo "Agent ID: XX"  # Replace XX with actual Agent ID from Step 6
+echo "Agent URL: http://YOUR_EC2_HOST"
+echo "ETH Address: YOUR_ETH_ADDRESS"
 echo "Proof File: proof.json"
 ```
 
@@ -818,8 +792,10 @@ curl -s http://$EC2_HOST/agent.json | jq
 ./scripts/attest-and-prove.sh
 
 # 6. Copy the latest proof to proof.json
-LATEST_PROOF=$(ls -t proof_*.json 2>/dev/null | head -1)
-cp "$LATEST_PROOF" proof.json
+# First find the filename:
+ls -t proof_*.json 2>/dev/null | head -1
+# Then copy it (replace PROOF_FILENAME with actual name from above):
+cp PROOF_FILENAME proof.json
 
 # 7. Register as new agent (or update existing)
 ./scripts/validate-and-register-agent.sh --proof-path proof.json
