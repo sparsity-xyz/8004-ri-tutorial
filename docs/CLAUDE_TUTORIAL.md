@@ -31,21 +31,18 @@ This tutorial is designed to be executed by Claude Code with user interaction at
    - **PEM filename** from email (e.g., `0x1d0531Fc8a495409C928db7CF17ca7608b3467BF.pem`)
    - **EC2_HOST** (IP address) from email (e.g., `54.180.105.144`)
    - **ETH_ADDRESS** from email (e.g., `0x1d0531Fc8a495409C928db7CF17ca7608b3467BF`)
-   - **PROOF_FILE** from Step 5 output (e.g., `proof_ac75ca763c4747be_20251022024237623.json`)
-   - **AGENT_ID** from Step 6 output (e.g., `28`)
+   - **PROOF_FILE** from Step 5: Move the generated proof file to `proof.json` for easy access
+   - **AGENT_ID** from Step 6 output (e.g., `28`) - Remember this value for Step 7
 
-   **Recommended approach**: Store these in shell variables and optionally in a `.env.temp` file:
-   ```bash
-   echo "PROOF_FILE=$PROOF_FILE" >> .env.temp
-   echo "AGENT_ID=$AGENT_ID" >> .env.temp
-   source .env.temp  # To reload in new commands
-   ```
+   **Recommended approach**:
+   - For the proof file: Copy it to `proof.json` after generation in Step 5
+   - For the Agent ID: Simply remember the number displayed in Step 6 output (no need to store in a file)
 
 2. **User Engagement**: Prompt users to manually edit configuration files (Step 1 & 2) rather than doing it automatically
 
 3. **Wait Points**: Always wait for user confirmation before proceeding after:
    - Creating `.env` file (user must add private key)
-   - Showing `agent.json` (user should customize it)
+   - Displaying `agent.json` content (user should customize it, or confirm to proceed with defaults)
 
 4. **Timing**: Respect wait times (15 seconds after deployment) to avoid errors
 
@@ -56,14 +53,34 @@ This tutorial is designed to be executed by Claude Code with user interaction at
 
 6. **Error Prevention**: Check prerequisites before each step (e.g., private key before Step 6)
 
+### Automation Level Guide
+
+**What Claude Code Should Do Automatically (No User Interaction):**
+- Extract PEM key from email file
+- Create and populate `.env` with extracted values (EC2_HOST, EC2_PEM_KEY, EC2_USER, ETH_ADDRESS)
+- Run all script commands (build, deploy, attest, register, verify)
+- Capture and track values (Agent ID, proof filename)
+- Wait 15 seconds after deployment
+
+**What Requires User Interaction:**
+- Step 0: User must download email file to repo directory
+- Step 1: User must manually add PRIVATE_KEY to `.env` file
+- Step 2: User decides whether to customize `agent.json` or proceed with defaults
+- Explicit confirmations before proceeding to next major step
+
+**Goal**: Minimize user interaction while ensuring they provide sensitive data (PRIVATE_KEY) themselves.
+
 ### Critical Checkpoints
-- ⚠️ **Step 0**: FIRST verify user has downloaded email file to base directory
-- ⚠️ **Step 1**: Stop after creating `.env` - wait for user to add PRIVATE_KEY
-- ⚠️ **Step 2**: Don't auto-edit `agent.json` - prompt user to customize it
-- ⚠️ **Step 3**: Wait 15 seconds after deployment completes
-- ⚠️ **Step 5**: Capture the exact proof filename for Step 6
-- ⚠️ **Step 6**: Verify private key exists before registration
-- ⚠️ **Step 7**: Use the Agent ID captured from Step 6
+- ⚠️ **Step 0**: FIRST verify user has downloaded email file to base directory (if not, stop and instruct user)
+- ⚠️ **Step 1a**: Automatically extract PEM key from email (do not wait for user)
+- ⚠️ **Step 1b**: Automatically create and populate `.env`, then STOP and wait for user to add PRIVATE_KEY
+- ⚠️ **Step 2**: Display `agent.json` and give user option to customize or proceed with defaults
+- ⚠️ **Step 3**: Automatically run deployment script, then wait 15 seconds before testing
+- ⚠️ **Step 4**: Automatically test endpoints using `$EC2_HOST` from .env
+- ⚠️ **Step 5**: Automatically generate proof and rename to `proof.json`
+- ⚠️ **Step 6**: Verify PRIVATE_KEY exists, then automatically register and capture Agent ID
+- ⚠️ **Step 7**: Automatically verify signatures using captured Agent ID
+- ⚠️ **Step 8**: Automatically present summary with all captured values
 
 ---
 
@@ -82,8 +99,8 @@ Before Claude Code can begin the tutorial, you must:
 
 2. **Download the email file** to this repository's base directory:
    - Save the email as a `.eml` file (e.g., `aws-credentials.eml`)
-   - Place it in: `/home/yl/Desktop/work/8004-ri-tutorial/`
-   - The file should be in the same directory as this README
+   - Place it in the root directory of this repository
+   - The file should be in the same directory as the README
 
 3. **Verify the email is in the correct location**:
    ```bash
@@ -101,30 +118,29 @@ Before Claude Code can begin the tutorial, you must:
 
 **Step 1a: Download and Decode PEM Key**
 
-**⚠️ Action for Claude Code**: FIRST check that the user has downloaded the email file:
+**⚠️ Action for Claude Code**: 
 
-```bash
-# Check for email file in base directory
-ls -la *.eml
-```
+1. **FIRST** check that the user has downloaded the email file:
+   ```bash
+   ls -la *.eml
+   ```
+   If no email file is found, **STOP** and prompt the user to complete Step 0 first.
 
-If no email file is found, **STOP** and prompt the user to complete Step 0 first.
-
-**Action for Claude Code**: Decode the email to extract the PEM key file:
-
-The email contains a base64-encoded PEM key file as an attachment. Extract it using this exact method:
+2. **Automatically extract** the PEM key from the email file (do not wait for user):
+   The email contains a base64-encoded PEM key file as an attachment. Extract it using this exact method:
 
 **Step 1: Identify the PEM filename from the email**
 ```bash
 # Read the email to find the PEM filename
 # It will be in a line like: filename="0x1d0531Fc8a495409C928db7CF17ca7608b3467BF.pem"
-grep 'filename.*\.pem' *.eml
+EC2_PEM_KEY=$(grep 'filename.*\.pem' *.eml | grep -oE '0x[a-fA-F0-9]{40}\.pem')
+echo "PEM filename: $EC2_PEM_KEY"
 ```
 
 **Step 2: Identify the email filename**
 ```bash
 # Get the actual email filename (don't assume the name)
-EMAIL_FILE=$(ls *.eml)
+EMAIL_FILE=$(ls *.eml | head -1)
 echo "Email file: $EMAIL_FILE"
 ```
 
@@ -132,7 +148,7 @@ echo "Email file: $EMAIL_FILE"
 ```bash
 # The base64 content is typically at lines 122-151 in the Sparsity welcome email
 # This command works for the standard Sparsity email format
-sed -n '122,151p' "$EMAIL_FILE" | tr -d '\r\n' | base64 -d > [PEM_FILENAME].pem
+sed -n '122,151p' "$EMAIL_FILE" | tr -d '\r\n' | base64 -d > "$EC2_PEM_KEY"
 
 # Example with actual filename:
 # sed -n '122,151p' "welcome to sparsity.eml" | tr -d '\r\n' | base64 -d > 0x1d0531Fc8a495409C928db7CF17ca7608b3467BF.pem
@@ -140,19 +156,19 @@ sed -n '122,151p' "$EMAIL_FILE" | tr -d '\r\n' | base64 -d > [PEM_FILENAME].pem
 
 **Step 4: Set correct permissions**
 ```bash
-chmod 400 [PEM_FILENAME].pem
+chmod 400 "$EC2_PEM_KEY"
 ```
 
 **Step 5: Verify the extraction was successful**
 ```bash
 # Check file was created and has content
-ls -la [PEM_FILENAME].pem
+ls -la "$EC2_PEM_KEY"
 
 # Verify it starts with the correct header
-head -1 [PEM_FILENAME].pem  # Should show "-----BEGIN RSA PRIVATE KEY-----"
+head -1 "$EC2_PEM_KEY"  # Should show "-----BEGIN RSA PRIVATE KEY-----"
 
 # Check file size (should be around 1674 bytes)
-wc -c [PEM_FILENAME].pem
+wc -c "$EC2_PEM_KEY"
 ```
 
 **Troubleshooting PEM Extraction**:
@@ -167,7 +183,7 @@ wc -c [PEM_FILENAME].pem
   1. Open the email file in a text editor
   2. Find the section after "Content-Transfer-Encoding: base64"
   3. Copy all the base64 lines (between the headers and the boundary marker)
-  4. Save to a file and decode: `base64 -d < base64_content.txt > [PEM_FILENAME].pem`
+  4. Save to a file and decode: `base64 -d < base64_content.txt > "$EC2_PEM_KEY"`
 
 **Note**: If you have a different email format, you may need to adjust the line numbers (122,151).
 
@@ -180,20 +196,29 @@ wc -c [PEM_FILENAME].pem
 
 **Step 1b: Configure Environment Variables**
 
-**Action for Claude Code**: Create a `.env` file based on `.env.example` and populate it with the information extracted from the email.
+**⚠️ Action for Claude Code**: Perform the following steps, then wait for user to add PRIVATE_KEY:
+
+1. Extract information from the email
+2. Create and populate the `.env` file with extracted values
+3. **THEN STOP** and wait for user to manually add their PRIVATE_KEY
 
 **Step 1: Extract information from email**
 ```bash
-# Extract EC2 IP address from email
+# Extract EC2 IP address from email (this becomes EC2_HOST)
 # Look for pattern like "IP Address: 54.180.105.144"
-grep -i "IP Address" *.eml | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}'
-
-# Or search for the IP in the SSH connection command
-grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' *.eml | head -1
+EC2_HOST=$(grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' *.eml | head -1)
+echo "EC2_HOST: $EC2_HOST"
 
 # Extract Ethereum address (it's in the greeting and filename)
 # Look for pattern like "Hi 0x1d0531Fc8a495409C928db7CF17ca7608b3467BF"
-grep -oE '0x[a-fA-F0-9]{40}' *.eml | head -1
+ETH_ADDRESS=$(grep -oE '0x[a-fA-F0-9]{40}' *.eml | head -1)
+echo "ETH_ADDRESS: $ETH_ADDRESS"
+
+# EC2_PEM_KEY was already extracted in Step 1a
+echo "EC2_PEM_KEY: ./$EC2_PEM_KEY"
+
+# EC2_USER is always ec2-user for AWS
+EC2_USER='ec2-user'
 ```
 
 **Step 2: Create .env file**
@@ -203,12 +228,23 @@ cp .env.example .env
 
 **Step 3: Populate .env with extracted values**
 
-Update the following variables in `.env`:
-- `EC2_HOST`: EC2 instance public IP address (extracted from email, e.g., `54.180.105.144`)
-- `EC2_PEM_KEY`: **Relative path** to extracted SSH private key file in project directory (e.g., `./0x1d0531Fc8a495409C928db7CF17ca7608b3467BF.pem`)
-- `EC2_USER`: SSH username (always `ec2-user` for AWS)
-- `ETH_ADDRESS`: Ethereum wallet address on Base Sepolia (extracted from email, the 0x address)
-- `PRIVATE_KEY`: Set to placeholder `YOUR_PRIVATE_KEY_HERE_64_HEX_CHARS_NO_0x_PREFIX` (user will add this later)
+Update the `.env` file with the extracted values:
+```bash
+# Update EC2_HOST
+sed -i "s|^export EC2_HOST=.*|export EC2_HOST='$EC2_HOST'|" .env
+
+# Update EC2_PEM_KEY  
+sed -i "s|^export EC2_PEM_KEY=.*|export EC2_PEM_KEY='./$EC2_PEM_KEY'|" .env
+
+# Update EC2_USER (always ec2-user for AWS)
+sed -i "s|^export EC2_USER=.*|export EC2_USER='$EC2_USER'|" .env
+
+# Update ETH_ADDRESS
+sed -i "s|^export ETH_ADDRESS=.*|export ETH_ADDRESS='$ETH_ADDRESS'|" .env
+
+# Leave PRIVATE_KEY as placeholder for user to fill in
+# The user will manually add their private key in Step 4
+```
 
 **⚠️ CRITICAL - Action for Claude Code**:
 After creating the `.env` file, you MUST:
@@ -226,7 +262,7 @@ export PRIVATE_KEY='a1b2c3d4e5f6...64_hex_characters_total'
 export PRIVATE_KEY='0xa1b2c3d4e5f6...'
 ```
 
-**Step 4: Verify .env configuration**
+**Step 4: Verify .env configuration (run after user adds PRIVATE_KEY)**
 ```bash
 # Source the .env file
 source .env
@@ -236,7 +272,7 @@ echo "EC2_HOST: $EC2_HOST"
 echo "EC2_PEM_KEY: $EC2_PEM_KEY"
 echo "EC2_USER: $EC2_USER"
 echo "ETH_ADDRESS: $ETH_ADDRESS"
-echo "PRIVATE_KEY: $PRIVATE_KEY"
+echo "PRIVATE_KEY: ${PRIVATE_KEY:0:10}...  (first 10 chars only for verification)"
 
 # Verify SSH key exists and has correct permissions
 ls -la $EC2_PEM_KEY
@@ -246,7 +282,8 @@ ssh -i $EC2_PEM_KEY -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "echo 'SSH c
 ```
 
 **Expected Outcome**:
-- All variables are displayed (PRIVATE_KEY will be placeholder)
+- All variables are displayed correctly
+- PRIVATE_KEY shows first 10 characters (confirms it was added)
 - PEM file has `-r--------` permissions (400)
 - SSH connection succeeds and prints "SSH connection successful"
 
@@ -254,7 +291,7 @@ ssh -i $EC2_PEM_KEY -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "echo 'SSH c
 1. Check PEM file permissions: `chmod 400 $EC2_PEM_KEY`
 2. Verify EC2_HOST is correct IP address (no extra characters)
 3. Verify EC2_PEM_KEY path is correct (starts with `./`)
-4. Try manual SSH: `ssh -i ./[PEM_FILE] ec2-user@[IP_ADDRESS]`
+4. Try manual SSH: `ssh -i $EC2_PEM_KEY $EC2_USER@$EC2_HOST`
 
 **Troubleshooting**:
 - If PEM file not found in email, check for attachments or base64-encoded content
@@ -269,11 +306,14 @@ ssh -i $EC2_PEM_KEY -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "echo 'SSH c
 **DO NOT** automatically edit `src/agent.json`. Instead:
 
 1. **Read** the current `src/agent.json` file to show the user what needs to be customized
-2. **Prompt the user** to manually edit the file themselves for better engagement
-3. Explain what fields need to be changed:
+2. **Prompt the user** with options:
+   - Option A: Manually edit the file to customize it (recommended for learning)
+   - Option B: Proceed with default values for a quick test
+3. Explain what fields can be changed:
    - `name`: A unique agent name (e.g., "MyAwesomeAgent_2025")
    - `description`: Describe what your agent does
    - `code_repository`: Your GitHub repository URL (if you forked it)
+4. **Wait for user decision** before proceeding to Step 3
 
 **Example customization**:
 ```json
@@ -359,23 +399,27 @@ After deployment completes:
 
 **Action**: Verify agent is responding correctly
 
-**⚠️ IMPORTANT**: Use the direct IP address from .env. The EC2_HOST is typically the IP address (e.g., 54.180.105.144).
+**⚠️ Action for Claude Code**: Use the EC2_HOST value from the .env file for all curl commands.
 
-**Simple Method - Use direct IP from .env**:
-Look at your .env file and find the EC2_HOST value, then use it directly in the curl commands.
-
-**Test all agent endpoints**:
+**Step 1: Load environment variables**
 ```bash
-# Replace 54.180.105.144 with your actual EC2_HOST IP from .env
+# Source the .env file to load EC2_HOST
+source .env
 
+# Verify EC2_HOST is set
+echo "Testing agent at: http://$EC2_HOST"
+```
+
+**Step 2: Test all agent endpoints**
+```bash
 # Test agent metadata (no signature)
-curl -s http://54.180.105.144/agent.json | jq
+curl -s http://$EC2_HOST/agent.json | jq
 
 # Test hello_world endpoint (returns signed response)
-curl -s http://54.180.105.144/hello_world | jq
+curl -s http://$EC2_HOST/hello_world | jq
 
 # Test add_two endpoint with POST data (returns signed response)
-curl -s -X POST http://54.180.105.144/add_two \
+curl -s -X POST http://$EC2_HOST/add_two \
     -H "Content-Type: application/json" \
     -d '{"a": 2, "b": 2}' | jq
 ```
@@ -383,7 +427,7 @@ curl -s -X POST http://54.180.105.144/add_two \
 **Step 3: Verify response format**
 ```bash
 # Check that hello_world returns both 'sig' and 'data' fields
-curl -s http://$EC2_IP/hello_world | jq 'has("sig") and has("data")'
+curl -s http://$EC2_HOST/hello_world | jq 'has("sig") and has("data")'
 # Should output: true
 ```
 
@@ -447,30 +491,27 @@ The script output will show a `[NEXT]` line with the exact command to run:
 [NEXT] Next: ./scripts/validate-and-register-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json
 ```
 
-**Simply copy the filename from this line** (e.g., `proof_c929d31acdd3cf31_20251010041858969.json`) and use it directly in Step 6.
+**⚠️ Action for Claude Code**: Rename the generated proof file to `proof.json` for easy access:
 
-**Verification (optional)**:
 ```bash
-# Use the filename from the [NEXT] line above
-PROOF_FILE="proof_c929d31acdd3cf31_20251010041858969.json"  # Replace with actual filename
+# Find the most recently created proof file and rename it
+# This handles the timestamped filename generated by the script
+LATEST_PROOF=$(ls -t proof_*.json 2>/dev/null | head -1)
+if [ -n "$LATEST_PROOF" ]; then
+    cp "$LATEST_PROOF" proof.json
+    echo "Copied $LATEST_PROOF to proof.json"
+else
+    echo "ERROR: No proof file found!"
+    exit 1
+fi
 
 # Verify it exists and is valid JSON
-ls -la "$PROOF_FILE"
-jq -r 'keys[]' "$PROOF_FILE" | head -6
+ls -la proof.json
+jq -r 'keys[]' proof.json | head -6
 # Should show: onchain_proof, program_id, proof_type, raw_proof, zktype, zkvm_version
 ```
 
-**Alternative - If you need to find it programmatically**:
-```bash
-# Find the most recent proof file
-ls -t proof_*.json | head -1
-```
-
-**Store for reference (optional)**:
-```bash
-echo "export PROOF_FILE=proof_[actual_filename].json" > .env.temp
-# Or keep it in a variable for the session
-```
+This simplifies Step 6 by always using `proof.json` instead of remembering the timestamped filename.
 
 **Troubleshooting**:
 - If agent URL not accessible, verify Step 4 tests pass
@@ -490,29 +531,18 @@ Before running this step, verify:
 
 **Action**: Submit blockchain transaction to register the agent
 
-**Step 1: Verify you have the proof filename from Step 5**
+**Step 1: Verify the proof file from Step 5 exists**
 ```bash
-# If you stored it in .env.temp
-source .env.temp 2>/dev/null && echo "PROOF_FILE: $PROOF_FILE"
-
-# Or find it again
-PROOF_FILE=$(ls -t proof_*.json | head -1)
-echo "Using proof file: $PROOF_FILE"
-
-# Verify the file exists
-[ -f "$PROOF_FILE" ] && echo "Proof file found" || echo "ERROR: Proof file not found!"
+# Verify proof.json exists (copied in Step 5)
+[ -f "proof.json" ] && echo "✓ Proof file found" || echo "ERROR: proof.json not found!"
 ```
 
-**Step 2: Run registration with the captured proof filename**
+**Step 2: Run registration with proof.json**
 ```bash
-# Use the PROOF_FILE variable (recommended)
-./scripts/validate-and-register-agent.sh --proof-path "$PROOF_FILE"
-
-# Or use the actual filename directly (example):
-# ./scripts/validate-and-register-agent.sh --proof-path proof_ac75ca763c4747be_20251022024237623.json
+./scripts/validate-and-register-agent.sh --proof-path proof.json
 ```
 
-**⚠️ Action for Claude Code**: You MUST use the exact filename captured in Step 5. Do not guess or use a placeholder.
+**⚠️ Action for Claude Code**: Always use `proof.json` (the file copied in Step 5).
 
 **What This Does**:
 1. Validates the proof file structure
@@ -555,21 +585,7 @@ The script output will show:
 [NEXT] Agent ID (uint256): 28
 ```
 
-**Simply note the Agent ID number** (e.g., `28`) and use it directly in Step 7.
-
-**Store for reference**:
-```bash
-# Store the Agent ID you see in the output
-echo "export AGENT_ID=28" >> .env.temp  # Replace 28 with actual Agent ID
-```
-
-**Verification (optional)**:
-```bash
-# Verify you captured it correctly
-source .env.temp && echo "Agent ID: $AGENT_ID"
-```
-
-**⚠️ Remember**: You MUST use this exact Agent ID number in Step 7. Do not lose this value.
+**⚠️ Action for Claude Code**: Simply remember the Agent ID number (e.g., `28`) for use in Step 7. No need to store it in a file - just use the number directly in the next step.
 
 **Verification**:
 ```bash
@@ -607,38 +623,23 @@ which python3
 pip install -q -r ./scripts/verifier/requirements.txt
 ```
 
-**Step 2: Verify you have the Agent ID from Step 6**
-```bash
-# If you stored it in .env.temp
-source .env.temp 2>/dev/null && echo "AGENT_ID: $AGENT_ID"
+**Step 2: Run signature verification with the Agent ID from Step 6**
 
-# If not stored, you need to manually set it from Step 6 output
-AGENT_ID=28  # Replace with your actual Agent ID from Step 6
-echo "Using Agent ID: $AGENT_ID"
-
-# Verify it's a number
-[[ "$AGENT_ID" =~ ^[0-9]+$ ]] && echo "Valid Agent ID" || echo "ERROR: Invalid Agent ID format"
-```
-
-**Step 3: Run signature verification with the captured Agent ID**
-
-**⚠️ Action for Claude Code**: You MUST use the exact Agent ID captured in Step 6. Do not use a placeholder.
+**⚠️ Action for Claude Code**: You must capture the Agent ID from the Step 6 registration output. Look for the line `[INFO] Agent ID (uint256): XX` where XX is the numeric ID. Use that exact number in the commands below.
 
 ```bash
 # Ensure virtual environment is active
 source .venv/bin/activate
+
+# Set the AGENT_ID variable to the value from Step 6
+# Replace XX with the actual Agent ID number (e.g., 28)
+AGENT_ID=XX
 
 # Verify hello_world endpoint
 python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/hello_world
 
 # Verify add_two endpoint with POST data
 python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/add_two --data='{"a": 1, "b": 2}'
-```
-
-**Example with actual Agent ID 28**:
-```bash
-python3 ./scripts/verifier/verify.py --agent-id=28 --url-path=/hello_world
-python3 ./scripts/verifier/verify.py --agent-id=28 --url-path=/add_two --data='{"a": 1, "b": 2}'
 ```
 
 **Expected Output**:
@@ -673,11 +674,13 @@ python3 ./scripts/verifier/verify.py --agent-id=28 --url-path=/add_two --data='{
 
 **Action for Claude Code**: Present a complete summary of the tutorial with all captured values.
 
-**Step 1: Load all captured values**
+**Step 1: Load environment values**
 ```bash
-# Load values from temp file if available
-source .env.temp 2>/dev/null
+# Load environment variables
 source .env
+
+# Set AGENT_ID to the value captured from Step 6
+AGENT_ID=XX  # Replace with actual Agent ID from Step 6
 
 # Display all key values
 echo "=== Tutorial Summary ==="
@@ -685,12 +688,12 @@ echo "Agent Name: $(cat src/agent.json | jq -r '.name')"
 echo "Agent ID: $AGENT_ID"
 echo "Agent URL: http://$EC2_HOST"
 echo "ETH Address: $ETH_ADDRESS"
-echo "Proof File: $PROOF_FILE"
+echo "Proof File: proof.json"
 ```
 
 **Step 2: Present completion summary to user**
 
-**⚠️ Action for Claude Code**: Use the actual values you captured throughout the tutorial. Do not use placeholders.
+**⚠️ Action for Claude Code**: Use the actual values captured throughout the tutorial. The template below shows placeholders in [brackets] - replace these with the actual values before showing to the user.
 
 Present to the user:
 ```
@@ -698,34 +701,34 @@ Present to the user:
 
 Your TEE Agent Details:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Agent Name:           [from agent.json]
-Agent ID:             [captured from Step 6]
-Agent URL:            http://[EC2_HOST]
-Owner Address:        [ETH_ADDRESS from .env]
-Agent Wallet:         [from Step 6 output]
-Transaction Hash:     [from Step 6 output]
-Proof File:           [captured from Step 5]
-Code Repository:      [from agent.json]
+Agent Name:           [value from src/agent.json "name" field]
+Agent ID:             [numeric ID captured from Step 6, e.g., 28]
+Agent URL:            http://[value of $EC2_HOST from .env]
+Owner Address:        [value of $ETH_ADDRESS from .env]
+Agent Wallet:         [agent wallet address from Step 6 output, if shown]
+Transaction Hash:     [transaction hash from Step 6 output]
+Proof File:           proof.json
+Code Repository:      [value from src/agent.json "code_repository" field]
 
 Explore Your Agent:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 1. TEE Agent Explorer:
    http://18.144.124.66:8080/
-   Search for your Agent ID: [AGENT_ID]
+   Search for your Agent ID: [numeric ID from Step 6]
 
 2. Registry Contract (Base Sepolia):
    https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637
 
 3. Your Registration Transaction:
-   https://sepolia.basescan.org/tx/[TRANSACTION_HASH]
+   https://sepolia.basescan.org/tx/[transaction hash from Step 6]
 
 4. Succinct ZK Proof Explorer:
-   [URL from Step 5 output]
+   [Succinct Explorer URL from Step 5 output]
 
 Test Your Agent:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-curl -s http://[EC2_HOST]/agent.json | jq
-curl -s http://[EC2_HOST]/hello_world | jq
+curl -s http://[value of $EC2_HOST]/agent.json | jq
+curl -s http://[value of $EC2_HOST]/hello_world | jq
 
 Next Steps:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -746,9 +749,9 @@ echo "https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a44
 
 **How Others Can Interact With Your Agent**:
 Others can interact with your agent by:
-1. Looking up your Agent ID ($AGENT_ID) in the registry
+1. Looking up your Agent ID (the number from Step 6) in the registry
 2. Retrieving your public key from on-chain storage
-3. Calling your agent endpoints at http://$EC2_HOST
+3. Calling your agent endpoints at your EC2_HOST URL
 4. Verifying response signatures using your public key
 5. Confirming code measurements match your repository
 
@@ -821,13 +824,17 @@ Smart contract that stores agent registrations:
 sleep 15
 
 # 4. Test endpoints
-curl -s http://$AGENT_URL/agent.json | jq
+curl -s http://$EC2_HOST/agent.json | jq
 
 # 5. Generate new proof (code measurement changed)
 ./scripts/attest-and-prove.sh
 
-# 6. Register as new agent (or update existing)
-./scripts/validate-and-register-agent.sh --proof-path proof_[NEW_FILENAME].json
+# 6. Copy the latest proof to proof.json
+LATEST_PROOF=$(ls -t proof_*.json 2>/dev/null | head -1)
+cp "$LATEST_PROOF" proof.json
+
+# 7. Register as new agent (or update existing)
+./scripts/validate-and-register-agent.sh --proof-path proof.json
 ```
 
 **Note**: Code changes produce different code measurements, requiring new proof and registration.
@@ -851,19 +858,22 @@ tail -f ~/host.log
 ### Manual Agent Testing
 
 ```bash
+# Load environment variables
+source .env
+
 # Test metadata endpoint
-curl http://$AGENT_URL/agent.json | jq
+curl http://$EC2_HOST/agent.json | jq
 
 # Test computation with signature
-curl -X POST http://$AGENT_URL/add_two \
+curl -X POST http://$EC2_HOST/add_two \
   -H "Content-Type: application/json" \
   -d '{"a": 100, "b": 200}' | jq
 
 # Extract just the signature
-curl -s http://$AGENT_URL/hello_world | jq -r '.sig'
+curl -s http://$EC2_HOST/hello_world | jq -r '.sig'
 
 # Extract just the data
-curl -s http://$AGENT_URL/hello_world | jq -r '.data'
+curl -s http://$EC2_HOST/hello_world | jq -r '.data'
 ```
 
 ### Querying Registry Contract
@@ -872,7 +882,9 @@ curl -s http://$AGENT_URL/hello_world | jq -r '.data'
 # Install web3.py if needed
 pip install web3
 
-# Query agent details (Python)
+# Set your Agent ID from Step 6
+AGENT_ID=28  # Replace with your actual Agent ID from Step 6
+
 python3 -c "
 from web3 import Web3
 w3 = Web3(Web3.HTTPProvider('https://sepolia.base.org'))
@@ -922,7 +934,7 @@ print(f'PublicKey: {agent[2]}')
 
 ### Issue: "Connection refused" when testing agent
 
-**Symptoms**: `curl http://$AGENT_URL/agent.json` returns connection error
+**Symptoms**: `curl http://$EC2_HOST/agent.json` returns connection error
 
 **Solutions**:
 1. Wait 15 seconds after deployment for enclave startup
@@ -945,7 +957,7 @@ print(f'PublicKey: {agent[2]}')
 **Symptoms**: `attest-and-prove.sh` times out after 300 seconds
 
 **Solutions**:
-1. Verify agent is accessible: `curl http://$AGENT_URL/attestation/download`
+1. Verify agent is accessible: `curl http://$EC2_HOST/attestation/download`
 2. Check Succinct service status (may be under high load)
 3. Retry with longer timeout: `./scripts/attest-and-prove.sh --timeout 600`
 4. Monitor proof status on Succinct Explorer (URL in output)
@@ -968,7 +980,7 @@ print(f'PublicKey: {agent[2]}')
 1. Verify AGENT_ID matches registered agent
 2. Check agent hasn't been redeployed (new keys generated)
 3. Ensure agent URL is correct
-4. Test endpoint manually: `curl http://$AGENT_URL/hello_world`
+4. Test endpoint manually: `curl http://$EC2_HOST/hello_world`
 5. Verify public key on-chain matches agent
 
 ### Issue: Python ModuleNotFoundError
@@ -1027,7 +1039,10 @@ echo "OPENAI_API_KEY=sk-..." >> src/.env
 
 3. Test chat endpoint:
 ```bash
-curl -X POST http://$AGENT_URL/chat \
+# Load environment variables
+source .env
+
+curl -X POST http://$EC2_HOST/chat \
   -H "Content-Type: application/json" \
   -d '{"prompt": "Explain TEE agents"}' | jq
 ```
