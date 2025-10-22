@@ -47,8 +47,8 @@ source .env
 success ".env loaded"
 
 step "Validating required environment variables"
-if [ -z "$REGISTRY" ] || [ -z "$RPC_URL" ] || [ -z "$PRIVATE_KEY" ]; then
-    err "REGISTRY, RPC_URL, and PRIVATE_KEY must be set in .env"
+if [ -z "$REGISTRY" ] || [ -z "$RPC_URL" ] || [ -z "$PRIVATE_KEY" ] || [ -z "$IDENTITY_REGISTRY" ]; then
+    err "REGISTRY, RPC_URL, PRIVATE_KEY, and IDENTITY_REGISTRY must be set in .env"
     exit 1
 fi
 success "Environment variables present"
@@ -224,10 +224,12 @@ fi
 if [ -n "$EXPLORER_BASE" ]; then
     step "Explorer references"
     CONTRACT_URL="$EXPLORER_BASE/address/$REGISTRY"
+    IDENTITY_CONTRACT_URL="$EXPLORER_BASE/address/$IDENTITY_REGISTRY"
     TXS_URL="$CONTRACT_URL#transactions"
     EVENTS_URL="$CONTRACT_URL#events"
     READ_URL="$CONTRACT_URL#readContract"
     highlight "Contract:    $CONTRACT_URL"
+    highlight "Identity Contract:    $IDENTITY_CONTRACT_URL"
     # highlight "Transactions:$TXS_URL"
     # highlight "Events:      $EVENTS_URL"
     # highlight "Read:        $READ_URL"
