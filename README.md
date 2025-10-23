@@ -189,7 +189,7 @@ Now you can test your agent!
 
 ```bash
 # Replace with your actual EC2 public IP (same as EC2_HOST in .env)
-export AGENT_URL=54.180.244.54
+export AGENT_URL=[your_agent_url]
 
 # Test the agent metadata endpoint
 curl -s http://$AGENT_URL/agent.json | jq
@@ -256,6 +256,8 @@ The proof file will be saved in the current directory. If successful, you should
 
 **Note:** You can track the proof generation progress on the Succinct Explorer using the URL shown in the output.
 
+**Note:** Copy the output from your terminal
+
 ### 6. Register & Validate Your Agent
 
 Now we'll register your agent on the Base Sepolia blockchain using the ZK proof you just generated. This proof verifies that your agent is running in a genuine TEE environment.
@@ -263,7 +265,7 @@ Now we'll register your agent on the Base Sepolia blockchain using the ZK proof 
 **Important:** Copy the exact command from the previous step's output (the `[NEXT]` line), or run:
 
 ```bash
-./scripts/validate-and-register-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json
+./scripts/validate-and-register-agent.sh --proof-path [your_generated_proof_path].json
 ```
 
 Replace the proof filename with your actual proof file name.
@@ -316,7 +318,7 @@ Then verify agent signatures:
 
 ```bash
 # Set your agent ID (replace with your actual ID from the previous step)
-export AGENT_ID=25
+export AGENT_ID=[your_agent_id]
 
 # Verify the hello_world endpoint
 python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/hello_world
@@ -349,7 +351,7 @@ The verification script:
 
 We provide multiple ways to explore registered agents:
 
-1. **TEE Agent Explorer**: Browse all registered agents at [http://18.144.124.66:8080/](http://18.144.124.66:8080/)
+1. **TEE Agent Explorer**: Currently, the smart contract is deployed on Base Sepolia. You can use our [TEE Agent Explorer](https://explorer.agents.sparsity.ai/) to explore registered agents.
 2. **Base Sepolia Block Explorer**: View the registry contract directly at [https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637](https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637)
 3. **Contract Documentation**: See [TEE Agent Registry Contract](docs/TEE_Agent_Registry.md) for detailed contract interaction instructions
 
