@@ -7,24 +7,67 @@ pip install -r requirements.txt
 ```
 
 ## verify
-- get the response from the agent like this
 ```
-{"sig":"306402302c49d28b19149bcdd10e6f2075cf19092cbe467bcc2f04a7050a01b9782101f8ee0b165fbceabfdf6e8a6286f043fbf002307153953741d7af583d0a6b433a7432e4a1096d488a9f573862b38d74300e5cbf48bf531755d6368b7e9816f10fcb2238","data":"Hello World"}
+# GET
+python3 verify.py --agent-id=17 --url-path=/hello_world
+
+# POST
+python3 verify.py --agent-id=17 --url-path=/add_two --data='{"a": 1, "b": 2}'
 ```
 
-- Run verification
+the output would be like:
 ```
-python3 verify.py --agent-id=17 --response-data='{"sig":"306402302c49d28b19149bcdd10e6f2075cf19092cbe467bcc2f04a7050a01b9782101f8ee0b165fbceabfdf6e8a6286f043fbf002307153953741d7af583d0a6b433a7432e4a1096d488a9f573862b38d74300e5cbf48bf531755d6368b7e9816f10fcb2238","data":"Hello World"}'
-```
+----------------------------------------------------------------------
+➤ TEE Agent Verification
+Starting verification flow
+----------------------------------------------------------------------
+  registry: 0xe718aec274E36781F18F42C363A3B516a4427637
+  rpc_url: https://sepolia.base.org
+  agent_id: 18
+  url_path: /hello_world
+  data: <empty>
 
-the output would be like
-```
-Agent loaded on-chain {
-    "agent_id": 17,
-    "code_measurement": "725da0e38d91dc65362f4203cecbfa201af8ee5e88eac37d75c57de24e44ba7b",
-    "pubkey": "3076301006072a8648ce3d020106052b810400220362000480e663d60e055fd5a717cd92dfaa053d377e335332331c79e82fafccf9f4f82d6860aff5629001b0b4a7acb4cd5d637689d77175b0f5f9c4a527153b245ac18c6e32ad33137b24cdfb476a8ee814fb6f68410c639d57ed34823bd5da0fe5df2f",
-    "tee_arch": "6e6974726f000000000000000000000000000000000000000000000000000000",
-    "url": "13.57.15.37"
+----------------------------------------------------------------------
+➤ Step 1/3: Query agent on-chain
+Fetching agent data from registry
+----------------------------------------------------------------------
+  agent_id: 18
+  owner: 0x855D4db013dE51a0cf7528d0C294a79b162eF1aD
+  agent_wallet_address: 0xdB6489882070D057d821CF0C6808bFcE1b06dA08
+  agent_url: 3.101.88.22
+
+Full agent record:
+{
+  "agent_id": 18,
+  "agent_url": "3.101.88.22",
+  "agent_wallet_address": "0xdB6489882070D057d821CF0C6808bFcE1b06dA08",
+  "code_measurement": "b2dce0c0b533dfdcb2fe11ec73b0a4b67810bbbff2c3871e743cd0b7382436d5",
+  "owner": "0x855D4db013dE51a0cf7528d0C294a79b162eF1aD",
+  "tee_arch": "6e6974726f000000000000000000000000000000000000000000000000000000",
+  "tee_pubkey": "3076301006072a8648ce3d020106052b81040022036200044bbefb39ef3a467d753d8d02b95a51dee2eefd977852a7adbbb7c47a8bab8efc9b9002028b8cd745bce9a8b9600e7fd6e71a0c3e569953b8027d77d250b1f461506bf5b88942664b810cd361210e5e2d368d79a670697df895973417651abe1f"
 }
-Signature verified: True
+
+✓ Agent loaded from chain
+
+----------------------------------------------------------------------
+➤ Step 2/3: Query agent endpoint
+Requesting data from the agent service
+----------------------------------------------------------------------
+  method: GET
+  url: http://3.101.88.22/hello_world
+  http_status: 200
+
+agent response (json):
+{
+  "sig": "efb8d1be50cb5b84f4d405089c80c4cc4f47b8002cb53f2a2feee5cea1b7b53b35ef5ff95a61a443bcd508c7987b91c61c36603a7f4decb61bbe9e1a42cace6a01",
+  "data": "Hello World"
+}
+
+✓ Agent responded with JSON
+
+----------------------------------------------------------------------
+➤ Step 3/3: Verify signature
+Checking agent wallet signature over response data
+----------------------------------------------------------------------
+✓ Signature verified (0xdB6489882070D057d821CF0C6808bFcE1b06dA08)
 ```
