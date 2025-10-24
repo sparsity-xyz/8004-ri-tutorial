@@ -51,7 +51,7 @@ Prompt:
 ```
 Hi Claude, I have cloned the Sparsity Trustless Agents Framework repo and have the lab environment email saved as `lab_environment.eml` in the repo directory.
 Please guide me through the steps to set up my environment, build my TEE agent, request a ZK proof, and register it on Base Sepolia.
-You can refer to the README.md file in the repo for detailed instructions.
+You can refer to the README.md & docs/CLAUDE_TUTORIAL.md file in the repo for detailed instructions.
 ```
 
 **Prefer the full manual tutorial?** Continue to the [detailed Quick Start](#quick-start) below for step-by-step instructions.
