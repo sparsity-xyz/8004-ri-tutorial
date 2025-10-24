@@ -1,4 +1,4 @@
-# Sparsity Trustless Agents Framework
+# Sparsity Trustless Agents Framework.
 
 <p align="center">🚀 Reference Implementation of TEE Registry in <a href="https://8004.org">ERC-8004</a></p>
 
