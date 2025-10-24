@@ -18,13 +18,73 @@ Note that one field here is the `codeMeasurement`. It can be thought of as a has
 
 Currently, the smart contract is deployed on Base Sepolia. You can use our [TEE Agent Explorer](https://explorer.agents.sparsity.ai/) to explore registered agents.
 
-Or you can explore the contract [here](https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637) on-chain directly. See more details in [TEE Agent Registry Contract](docs/TEE_Agent_Registry.md).
+Or you can explore the contract [here](https://sepolia.basescan.org/address/0x396540938a5867A383DAef4c80172190189f80fC) on-chain directly. See more details in [TEE Agent Registry Contract](docs/TEE_Agent_Registry.md).
+
+## 🚀 Even Quicker Start with Claude Code
+
+> **⚡ New!** Build and deploy your TEE agent in minutes using Claude Code's AI-powered workflow automation!
+
+**Why use Claude Code?**
+- 🤖 **AI-Guided Setup**: Claude walks you through each step with context-aware assistance
+- 🔄 **Auto-Execution**: No manual copy-paste—Claude can run scripts directly in your environment
+- 🛠️ **Smart Debugging**: Real-time error detection and fixes as you build
+- 📝 **Interactive Documentation**: Ask questions about any step and get instant explanations
+
+### Prerequisites
+- Access to [Claude.ai](https://claude.ai) or Claude Desktop with Code execution enabled
+- AWS Nitro Enclave environment (apply for [free lab access](https://tinyurl.com/sparsity-8004-lab))
+- Your `.env` file configured (see [full tutorial](#2-edit-env-for-nitro-enclave-runtime-and-base-sepolia-setup))
+
+### Quick Steps
+
+1. **Open this repo in Claude Code**
+   - In Claude, say: *"Help me build and deploy a TEE agent using the 8004-ri-tutorial repository"*
+   - Claude will analyze the repo structure and guide you through setup
+
+2. **Let Claude handle the workflow**
+   ```
+   Ask Claude: "Build and deploy my TEE agent to AWS Nitro Enclave"
+   ```
+   Claude will:
+   - ✅ Validate your `.env` configuration
+   - ✅ Run local Docker tests
+   - ✅ Deploy to your EC2 Nitro instance
+   - ✅ Generate ZK proofs
+   - ✅ Register your agent on-chain
+   - ✅ Verify the deployment
+
+3. **Test and iterate**
+   - Claude can modify your agent code, re-deploy, and test endpoints
+   - Ask Claude to explain any errors or optimize your agent logic
+
+### Example Conversation Starters
+
+```
+💬 "Walk me through deploying my first TEE agent"
+💬 "My deployment failed with error X, can you help debug?"
+💬 "Modify my agent to add a new /calculate endpoint"
+💬 "Show me how to verify my agent's signature responses"
+💬 "What's my agent ID and how do I query it on-chain?"
+```
+
+### What Makes This Different?
+
+| Traditional Manual Flow | 🚀 With Claude Code |
+|-------------------------|---------------------|
+| Read docs, copy commands | Ask Claude, get guided execution |
+| Debug errors manually | Claude identifies & fixes issues |
+| 30-45 minutes | **5-10 minutes** |
+| Switch between terminal/browser/docs | All in one conversation |
+
+---
+
+**Prefer the full manual tutorial?** Continue to the [detailed Quick Start](#quick-start) below for step-by-step instructions.
 
 ## ⚡ Quick Start
 
 This tutorial will guide you through the complete process of building, deploying, and registering a TEE (Trusted Execution Environment) agent on the ERC-8004 registry.
 
-### What You'll Build
+### What You'll Get
 
 By the end of this tutorial, you will have:
 - ✅ A TEE agent running inside an AWS Nitro Enclave
@@ -32,20 +92,6 @@ By the end of this tutorial, you will have:
 - ✅ Your agent registered on-chain on Base Sepolia
 - ✅ Cryptographically signed responses from your agent
 - ✅ A unique Agent ID that others can use to verify your agent
-
-### Prerequisites
-
-- Access to an AWS Nitro Enclave environment (apply at https://tinyurl.com/sparsity-8004-lab)
-- Basic familiarity with command line, Docker, and Git
-- A Base Sepolia wallet with some testnet ETH for gas fees
-
-### Time Required
-
-- **Total**: ~15-20 minutes
-- Setup and deployment: 5 minutes
-- ZK proof generation: ~65 seconds
-- On-chain registration: ~2 seconds
-- Testing and verification: 5 minutes
 
 ### Tutorial Steps
 
@@ -103,21 +149,6 @@ Please fill in the required values in `.env` as described in the file. The key v
 
 If you have submitted the lab environment application form, you will receive these details via email.
 
-**Important:** Ensure your PEM key file has correct permissions:
-```bash
-chmod 400 ~/.ssh/your-key.pem
-```
-
-**Note on SSH host verification:** When you first connect to your EC2 instance, SSH may prompt you to verify the host fingerprint and add it to known_hosts. If the deployment script hangs or prompts for input, you can pre-add the host to your known_hosts file:
-```bash
-ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
-```
-Or connect manually once first:
-```bash
-ssh -i $EC2_PEM_KEY $EC2_USER@$EC2_HOST
-# Type 'yes' when prompted, then exit
-```
-
 ### 3. Edit Agent Code
 
 You need to change `src/agent.json` to customize your agent, so that your agent can be identified on-chain.
@@ -126,7 +157,7 @@ You need to change `src/agent.json` to customize your agent, so that your agent 
 {
   "name": "[Your Agent Name]",
   "description": "[Your description here]",
-  "code_repository": "https://github.com/[your-username]/sparsity-trustless-agents-framework",
+  "code_repository": "https://github.com/[your-username]/8004-ri-tutorial",
 }
 ```
 
@@ -141,9 +172,13 @@ nano src/.env
 
 ### 4. Build & Deploy Your Agent
 
-**Note:** Local Docker testing with `./scripts/build-and-deploy-local.sh` is currently under maintenance. You can proceed directly to remote deployment.
+If you have modified the agent code, please make sure you have tested locally with Docker first.
 
-Deploy your agent to the EC2 Nitro Enclave by running:
+```bash
+./scripts/build-and-deploy-local.sh
+```
+
+After local testing, deploy your agent to the EC2 Nitro Enclave by running:
 
 ```bash
 ./scripts/build-and-deploy-remote.sh
@@ -183,13 +218,11 @@ Started enclave with enclave-cid: 16, memory: 4096 MiB, cpu-ids: [1, 3]
 [OK] Deployment workflow completed
 ```
 
-**Important:** Wait 10-15 seconds after deployment completes for the enclave to fully start up before testing endpoints.
-
 Now you can test your agent!
 
 ```bash
 # Replace with your actual EC2 public IP (same as EC2_HOST in .env)
-export AGENT_URL=54.180.244.54
+export AGENT_URL=[your-ec2-public-ip]
 
 # Test the agent metadata endpoint
 curl -s http://$AGENT_URL/agent.json | jq
@@ -220,7 +253,6 @@ Example:
   "data": "4"
 }
 ```
-
 
 
 ### 5. Request ZK Proof of Your Agent
@@ -263,10 +295,10 @@ Now we'll register your agent on the Base Sepolia blockchain using the ZK proof 
 **Important:** Copy the exact command from the previous step's output (the `[NEXT]` line), or run:
 
 ```bash
-./scripts/validate-and-register-agent.sh --proof-path proof_c929d31acdd3cf31_20251010041858969.json
+./scripts/validate-and-register-agent.sh --proof-path [proof_generated_from_previous_step.json]
 ```
 
-Replace the proof filename with your actual proof file name.
+NOTE: you can just copy the command from the output of the previous step.
 
 **What this script does:**
 1. Validates the proof file structure
@@ -277,122 +309,31 @@ Replace the proof filename with your actual proof file name.
 You should see output like below:
 
 ```
-==> Sending registerAgent transaction
-[OK] Transaction submitted
-{
-  "transactionHash": "0xba702163a283a243fbdf66237e152ade21f78a61199c6270914d73cec59bb7c0",
-  ...
-}
-[OK] Agent registered successfully
-[INFO] Agent ID (uint256): 25
-[INFO] Agent ID (hex): 0x0000000000000000000000000000000000000000000000000000000000000019
+[OK] Agent registered (no AgentModified event parsed)
+[WARN] Could not extract agent ID from transaction logs
 ==> Summary
-[INFO] Elapsed: 2s
-[INFO] Registry: 0xe718aec274E36781F18F42C363A3B516a4427637
-[INFO] Agent URL: 3.101.88.86
-[INFO] Proof: proof_c929d31acdd3cf31_20251010041858969.json
+[INFO] Elapsed: 1s
+[INFO] Registry: 0x396540938a5867A383DAef4c80172190189f80fC
+[INFO] Agent URL: https://lottery.zfdang.com
+[INFO] Proof: proof_c929d31acdd3cf31_20251023031608055.json
+[INFO] Next: Update agent metadata / publish discovery record if required
 ==> Explorer references
-[NEXT] Contract:    https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637
-[NEXT] Agent ID (uint256): 25
+[NEXT] Contract:    https://sepolia.basescan.org/address/0x396540938a5867A383DAef4c80172190189f80fC
+[NEXT] Identity Contract:    https://sepolia.basescan.org/address/0x8004AA63c570c570eBF15376c0dB199918BFe9Fb
 ```
 
 **Congratulations!** Your agent is now registered and validated on-chain!
 
 **Save your Agent ID** - you'll need it to verify signatures and for others to interact with your agent.
 
-#### Verify Agent Signatures
-
-Now you can verify that responses from your agent are cryptographically signed by the registered TEE agent. First, set up the Python verification environment:
-
-```bash
-# Activate the virtual environment
-source .venv/bin/activate
-
-# Install verification dependencies
-pip install -r ./scripts/verifier/requirements.txt
-```
-
-Then verify agent signatures:
-
-```bash
-# Set your agent ID (replace with your actual ID from the previous step)
-export AGENT_ID=25
-
-# Verify the hello_world endpoint
-python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/hello_world
-
-# Verify the add_two endpoint with POST data
-python3 ./scripts/verifier/verify.py --agent-id=$AGENT_ID --url-path=/add_two --data='{"a": 1, "b": 2}'
-```
-
-**Expected output:**
-```
-----------------------------------------------------------------------
-➤ TEE Agent Verification
-----------------------------------------------------------------------
-➤ Step 1/3: Query agent on-chain
-✓ Agent loaded from chain
-
-➤ Step 2/3: Query agent endpoint
-✓ Agent responded with JSON
-
-➤ Step 3/3: Verify signature
-✓ Signature verified (0xB2c3fe983f3cAb06B766bFF53DD1Db7Ac4d2A8e9)
-```
-
-The verification script:
-1. Fetches your agent's public key from the on-chain registry
-2. Calls your agent endpoint and gets the signed response
-3. Cryptographically verifies that the signature matches the registered agent
-
 ### 7. Explore Agents
 
-We provide multiple ways to explore registered agents:
+We provide multiple ways to explore registered agents & play with them:
 
-1. **TEE Agent Explorer**: Browse all registered agents at [http://18.144.124.66:8080/](http://18.144.124.66:8080/)
-2. **Base Sepolia Block Explorer**: View the registry contract directly at [https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637](https://sepolia.basescan.org/address/0xe718aec274E36781F18F42C363A3B516a4427637)
-3. **Contract Documentation**: See [TEE Agent Registry Contract](docs/TEE_Agent_Registry.md) for detailed contract interaction instructions
+1. **TEE Agent Explorer**: Browse all registered TEE agents at [https://explorer.agents.sparsity.ai/](https://explorer.agents.sparsity.ai/)
+2. **Base Sepolia Block Explorer**: View the registry contract directly at [https://sepolia.basescan.org/address/0x396540938a5867A383DAef4c80172190189f80fC](https://sepolia.basescan.org/address/0x396540938a5867A383DAef4c80172190189f80fC). See help in [TEE Agent Registry Contract](docs/TEE_Agent_Registry.md)
 
 ## 🔧 Troubleshooting
-
-### Agent endpoint not responding
-
-If `curl http://$AGENT_URL/agent.json` fails or times out:
-
-1. **Wait longer**: The enclave needs 10-15 seconds to start after deployment
-2. **Check enclave is running**: SSH into your EC2 instance and run:
-   ```bash
-   nitro-cli describe-enclaves
-   ```
-   You should see an active enclave with status information.
-
-3. **Check host proxy logs**: On the EC2 instance:
-   ```bash
-   tail -f ~/host.log
-   ```
-
-4. **Redeploy if needed**: Sometimes redeploying helps:
-   ```bash
-   ./scripts/build-and-deploy-remote.sh
-   ```
-
-### Python virtual environment issues
-
-If you get `ModuleNotFoundError` when running the verifier:
-
-```bash
-# Make sure you're in the project root directory
-cd /path/to/8004-ri-tutorial
-
-# Activate the virtual environment
-source .venv/bin/activate
-
-# Verify activation (should show .venv path)
-which python3
-
-# Install dependencies
-pip install -r ./scripts/verifier/requirements.txt
-```
 
 ### SSH connection issues
 
@@ -409,25 +350,6 @@ If deployment fails with SSH errors:
    ```
 
 3. **Check .env variables**: Ensure `EC2_HOST`, `EC2_USER`, and `EC2_PEM_KEY` are correctly set
-
-### Proof generation timeout
-
-If `./scripts/attest-and-prove.sh` times out:
-
-1. **Check agent is accessible**: Ensure `http://$EC2_HOST/attestation/download` returns data
-2. **Increase timeout**: Run with custom timeout:
-   ```bash
-   ./scripts/attest-and-prove.sh --timeout 300
-   ```
-3. **Check Succinct service**: The ZK proof service might be experiencing high load
-
-### Transaction fails during registration
-
-If the blockchain transaction fails:
-
-1. **Check ETH balance**: Ensure your wallet has enough Base Sepolia ETH for gas
-2. **Verify PRIVATE_KEY format**: Should be a 64-character hex string (without 0x prefix in .env)
-3. **Check RPC endpoint**: Verify `https://sepolia.base.org` is accessible
 
 ### Need Base Sepolia testnet ETH?
 
