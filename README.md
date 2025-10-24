@@ -42,7 +42,7 @@ cd 8004-ri-tutorial
 
 If you have applied for the Sparsity Lab Environment, you will receive an email with the necessary details to start your tutorial. Download that email as a `.eml` file to your local machine.
 
-move .eml file to the cloned repo directory.
+Move .eml file to the cloned repo directory.
 
 ### 3. Ask Claude Code to build and deploy your agent
 
