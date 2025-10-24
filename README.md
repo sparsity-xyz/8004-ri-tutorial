@@ -34,7 +34,7 @@ Or you can explore the contract [here](https://sepolia.basescan.org/address/0x39
 Fork this repo to your own GitHub account, then clone it to your local machine.
 
 ```bash
-git clone https://github.com/[your-username]/8004-ri-tutorial --depth=1 
+git clone https://github.com/[your-username]/8004-ri-tutorial --depth=1
 cd 8004-ri-tutorial
 ```
 
