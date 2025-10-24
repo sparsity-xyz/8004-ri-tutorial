@@ -49,9 +49,9 @@ Move .eml file to the cloned repo directory.
 Prompt:
 
 ```
-Hi Claude, I have cloned the Sparsity Trustless Agents Framework repo and have the lab environment email saved as `lab_environment.eml` in the repo directory.
+Hi Claude, I have cloned the Sparsity Trustless Agents Framework repo and have the lab environment email saved as `*.eml` in the repo directory.
 Please guide me through the steps to set up my environment, build my TEE agent, request a ZK proof, and register it on Base Sepolia.
-You can refer to the README.md & docs/CLAUDE_TUTORIAL.md file in the repo for detailed instructions.
+You can refer to README.md and docs/CLAUDE_TUTORIAL.md file in the repo for detailed instructions. Please list the steps upfront and then guide me through the steps one by one. Explain everything clearly like I'm a 5 years old.
 ```
 
 **Prefer the full manual tutorial?** Continue to the [detailed Quick Start](#quick-start) below for step-by-step instructions.
