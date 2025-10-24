@@ -34,7 +34,7 @@ Or you can explore the contract [here](https://sepolia.basescan.org/address/0x39
 Fork this repo to your own GitHub account, then clone it to your local machine.
 
 ```bash
-git clone https://github.com/[your-username]/8004-ri-tutorial --depth=1 
+git clone https://github.com/[your-username]/8004-ri-tutorial --depth=1
 cd 8004-ri-tutorial
 ```
 
@@ -42,7 +42,7 @@ cd 8004-ri-tutorial
 
 If you have applied for the Sparsity Lab Environment, you will receive an email with the necessary details to start your tutorial. Download that email as a `.eml` file to your local machine.
 
-move .eml file to the cloned repo directory.
+Move .eml file to the cloned repo directory.
 
 ### 3. Ask Claude Code to build and deploy your agent
 
@@ -274,7 +274,7 @@ Now we'll register your agent on the Base Sepolia blockchain using the ZK proof 
 ./scripts/validate-and-register-agent.sh --proof-path [proof_generated_from_previous_step.json]
 ```
 
-NOTE: you can just copy the command from the output of the previous step.
+**Note:** you can just copy the command from the output of the previous step.
 
 **What this script does:**
 1. Validates the proof file structure
