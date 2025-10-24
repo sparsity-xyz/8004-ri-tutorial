@@ -285,17 +285,19 @@ Now we'll register your agent on the Base Sepolia blockchain using the ZK proof 
 You should see output like below:
 
 ```
-[OK] Agent registered (no AgentModified event parsed)
-[WARN] Could not extract agent ID from transaction logs
+[OK] Agent registered successfully
+[INFO] Agent ID (uint256): 39
+[INFO] Agent ID (hex): 0x0000000000000000000000000000000000000000000000000000000000000027
 ==> Summary
 [INFO] Elapsed: 1s
 [INFO] Registry: 0x396540938a5867A383DAef4c80172190189f80fC
-[INFO] Agent URL: https://lottery.zfdang.com
-[INFO] Proof: proof_c929d31acdd3cf31_20251023031608055.json
+[INFO] Agent URL: 54.151.28.133
+[INFO] Proof: proof_c929d31acdd3cf31_20251024020909456.json
 [INFO] Next: Update agent metadata / publish discovery record if required
 ==> Explorer references
 [NEXT] Contract:    https://sepolia.basescan.org/address/0x396540938a5867A383DAef4c80172190189f80fC
 [NEXT] Identity Contract:    https://sepolia.basescan.org/address/0x8004AA63c570c570eBF15376c0dB199918BFe9Fb
+[NEXT] Agent ID (uint256): 39
 ```
 
 **Congratulations!** Your agent is now registered and validated on-chain!
