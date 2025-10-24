@@ -128,8 +128,8 @@ info "Waiting 2s for host proxy warm-up"
 sleep 2
 success "Warm-up complete"
 
-# Run enclave in debug mode
-step "Running enclave in debug mode"
+# Run enclave in production mode
+step "Running enclave in production mode"
 ssh -i "$EC2_PEM_KEY" "$EC2_USER@$EC2_HOST" "cd ~/app && HOME=/home/$EC2_USER sudo nitro-cli run-enclave --eif-path $EIF_FILE_NAME --cpu-count $ENCLAVE_CPU_COUNT --memory $ENCLAVE_MEMORY --enclave-cid 16"
 success "Enclave launch command executed"
 
