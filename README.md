@@ -274,7 +274,7 @@ Now we'll register your agent on the Base Sepolia blockchain using the ZK proof 
 ./scripts/validate-and-register-agent.sh --proof-path [proof_generated_from_previous_step.json]
 ```
 
-NOTE: you can just copy the command from the output of the previous step.
+**Note:** you can just copy the command from the output of the previous step.
 
 **What this script does:**
 1. Validates the proof file structure
