@@ -30,53 +30,29 @@ Or you can explore the contract [here](https://sepolia.basescan.org/address/0x39
 - 🛠️ **Smart Debugging**: Real-time error detection and fixes as you build
 - 📝 **Interactive Documentation**: Ask questions about any step and get instant explanations
 
-### Prerequisites
-- Access to [Claude.ai](https://claude.ai) or Claude Desktop with Code execution enabled
-- AWS Nitro Enclave environment (apply for [free lab access](https://tinyurl.com/sparsity-8004-lab))
-- Your `.env` file configured (see [full tutorial](#2-edit-env-for-nitro-enclave-runtime-and-base-sepolia-setup))
+### 1. Fork & Clone
+Fork this repo to your own GitHub account, then clone it to your local machine.
 
-### Quick Steps
-
-1. **Open this repo in Claude Code**
-   - In Claude, say: *"Help me build and deploy a TEE agent using the 8004-ri-tutorial repository"*
-   - Claude will analyze the repo structure and guide you through setup
-
-2. **Let Claude handle the workflow**
-   ```
-   Ask Claude: "Build and deploy my TEE agent to AWS Nitro Enclave"
-   ```
-   Claude will:
-   - ✅ Validate your `.env` configuration
-   - ✅ Run local Docker tests
-   - ✅ Deploy to your EC2 Nitro instance
-   - ✅ Generate ZK proofs
-   - ✅ Register your agent on-chain
-   - ✅ Verify the deployment
-
-3. **Test and iterate**
-   - Claude can modify your agent code, re-deploy, and test endpoints
-   - Ask Claude to explain any errors or optimize your agent logic
-
-### Example Conversation Starters
-
-```
-💬 "Walk me through deploying my first TEE agent"
-💬 "My deployment failed with error X, can you help debug?"
-💬 "Modify my agent to add a new /calculate endpoint"
-💬 "Show me how to verify my agent's signature responses"
-💬 "What's my agent ID and how do I query it on-chain?"
+```bash
+git clone https://github.com/[your-username]/8004-ri-tutorial --depth=1 
+cd 8004-ri-tutorial
 ```
 
-### What Makes This Different?
+### 2. Download email from Sparsity as .eml file
 
-| Traditional Manual Flow | 🚀 With Claude Code |
-|-------------------------|---------------------|
-| Read docs, copy commands | Ask Claude, get guided execution |
-| Debug errors manually | Claude identifies & fixes issues |
-| 30-45 minutes | **5-10 minutes** |
-| Switch between terminal/browser/docs | All in one conversation |
+If you have applied for the Sparsity Lab Environment, you will receive an email with the necessary details to start your tutorial. Download that email as a `.eml` file to your local machine.
 
----
+move .eml file to the cloned repo directory.
+
+### 3. Ask Claude Code to build and deploy your agent
+
+Prompt:
+
+```
+Hi Claude, I have cloned the Sparsity Trustless Agents Framework repo and have the lab environment email saved as `lab_environment.eml` in the repo directory.
+Please guide me through the steps to set up my environment, build my TEE agent, request a ZK proof, and register it on Base Sepolia.
+You can refer to the README.md file in the repo for detailed instructions.
+```
 
 **Prefer the full manual tutorial?** Continue to the [detailed Quick Start](#quick-start) below for step-by-step instructions.
 
